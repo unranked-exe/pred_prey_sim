@@ -17,7 +17,7 @@ public class Simulator
     // The probability that a barracuda will be created in any given grid position.
     private static final double BARRACUDA_CREATION_PROBABILITY = 0.02;
     // The probability that a shark will be created in any given grid position.
-    private static final double SHARK_CREATION_PROBABILITY = 0.01;
+    private static final double SHARK_CREATION_PROBABILITY = 0.02;
     // The probability that a goldfish will be created in any given position.
     private static final double GOLDFISH_CREATION_PROBABILITY = 0.08;  
     // The probability that a tuna will be created in any given position.
