@@ -12,7 +12,7 @@ public class Tuna extends Animal
 {
     // Characteristics shared by all tunas (class variables).
     // The age at which a tuna can start to breed.
-    private static final int BREEDING_AGE = 5;
+    private static final int BREEDING_AGE = 2;
     // The age to which a tuna can live.
     private static final int MAX_AGE = 40;
     // The likelihood of a tuna breeding.
