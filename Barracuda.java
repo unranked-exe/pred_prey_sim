@@ -3,44 +3,43 @@ import java.util.Iterator;
 import java.util.Random;
 
 /**
- * A simple model of a fox.
- * Foxes age, move, eat rabbits, and die.
+ * A simple model of a barracuda.
+ * Barracudas age, move, eat fish, and die.
  * 
  * @author David J. Barnes and Michael Kölling
  * @version 7.1
  */
-public class Fox extends Animal
+public class Barracuda extends Animal
 {
-    // Characteristics shared by all foxes (class variables).
-    // The age at which a fox can start to breed.
-    private static final int BREEDING_AGE = 15;
-    // The age to which a fox can live.
-    private static final int MAX_AGE = 150;
-    // The likelihood of a fox breeding.
+    // Characteristics shared by all barracudas (class variables).
+    // The age at which a barracuda can start to breed.
+    private static final int BREEDING_AGE = 4;
+    // The age to which a barracuda can live.
+    private static final int MAX_AGE = 18;
+    // The likelihood of a barracuda breeding.
     private static final double BREEDING_PROBABILITY = 0.08;
     // The maximum number of births.
-    private static final int MAX_LITTER_SIZE = 2;
-    // The food value of a single rabbit. In effect, this is the
-    // number of steps a fox can go before it has to eat again.
-    private static final int RABBIT_FOOD_VALUE = 9;
+    private static final int MAX_LITTER_SIZE = 4;
+    // The food value of a single fish. In effect, this is the
+    // number of steps a barracuda can go before it has to eat again.
+    private static final int FISH_FOOD_VALUE = 7;
     // A shared random number generator to control breeding.
     private static final Random rand = Randomizer.getRandom();
     
     // Individual characteristics (instance fields).
-
-    // The fox's age.
+    // The barracuda's age.
     private int age;
-    // The fox's food level, which is increased by eating rabbits.
+    // The barracuda's food level, which is increased by eating fish.
     private int foodLevel;
 
     /**
-     * Create a fox. A fox can be created as a new born (age zero
+     * Create a barracuda. A barracuda can be created as a new born (age zero
      * and not hungry) or with a random age and food level.
      * 
-     * @param randomAge If true, the fox will have random age and hunger level.
+     * @param randomAge If true, the barracuda will have random age and hunger level.
      * @param location The location within the field.
      */
-    public Fox(boolean randomAge, Location location)
+    public Barracuda(boolean randomAge, Location location)
     {
         super(location);
         if(randomAge) {
@@ -49,12 +48,12 @@ public class Fox extends Animal
         else {
             age = 0;
         }
-        foodLevel = rand.nextInt(RABBIT_FOOD_VALUE);
+        foodLevel = rand.nextInt(FISH_FOOD_VALUE);
     }
     
     /**
-     * This is what the fox does most of the time: it hunts for
-     * rabbits. In the process, it might breed, die of hunger,
+     * This is what the barracuda does most of the time: it hunts for
+     * fish. In the process, it might breed, die of hunger,
      * or die of old age.
      * @param currentField The field currently occupied.
      * @param nextFieldState The updated field.
@@ -87,11 +86,9 @@ public class Fox extends Animal
         }
     }
 
-
-
     @Override
     public String toString() {
-        return "Fox{" +
+        return "Barracuda{" +
                 "age=" + age +
                 ", alive=" + isAlive() +
                 ", location=" + getLocation() +
@@ -100,7 +97,7 @@ public class Fox extends Animal
     }
 
     /**
-     * Increase the age. This could result in the fox's death.
+     * Increase the age. This could result in the barracuda's death.
      */
     private void incrementAge()
     {
@@ -111,7 +108,7 @@ public class Fox extends Animal
     }
     
     /**
-     * Make this fox more hungry. This could result in the fox's death.
+     * Make this barracuda more hungry. This could result in the barracuda's death.
      */
     private void incrementHunger()
     {
@@ -122,8 +119,8 @@ public class Fox extends Animal
     }
     
     /**
-     * Look for rabbits adjacent to the current location.
-     * Only the first live rabbit is eaten.
+     * Look for fish adjacent to the current location.
+     * Only the first live fish is eaten.
      * @param field The field currently occupied.
      * @return Where food was found, or null if it wasn't.
      */
@@ -135,10 +132,10 @@ public class Fox extends Animal
         while(foodLocation == null && it.hasNext()) {
             Location loc = it.next();
             Animal animal = field.getAnimalAt(loc);
-            if(animal instanceof Rabbit rabbit) {
-                if(rabbit.isAlive()) {
-                    rabbit.setDead();
-                    foodLevel = RABBIT_FOOD_VALUE;
+            if(animal instanceof Tuna fish) {
+                if(fish.isAlive()) {
+                    fish.setDead();
+                    foodLevel = FISH_FOOD_VALUE;
                     foodLocation = loc;
                 }
             }
@@ -147,19 +144,18 @@ public class Fox extends Animal
     }
     
     /**
-     * Check whether this fox is to give birth at this step.
+     * Check whether this barracuda is to give birth at this step.
      * New births will be made into free adjacent locations.
      * @param freeLocations The locations that are free in the current field.
      */
     private void giveBirth(Field nextFieldState, List<Location> freeLocations)
     {
-        // New foxes are born into adjacent locations.
-        // Get a list of adjacent free locations.
+        // New barracudas are born into adjacent locations.
         int births = breed();
         if(births > 0) {
             for (int b = 0; b < births && ! freeLocations.isEmpty(); b++) {
                 Location loc = freeLocations.remove(0);
-                Fox young = new Fox(false, loc);
+                Barracuda young = new Barracuda(false, loc);
                 nextFieldState.placeAnimal(young, loc);
             }
         }
@@ -183,7 +179,7 @@ public class Fox extends Animal
     }
 
     /**
-     * A fox can breed if it has reached the breeding age.
+     * A barracuda can breed if it has reached the breeding age.
      */
     private boolean canBreed()
     {

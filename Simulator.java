@@ -2,7 +2,7 @@ import java.util.*;
 
 /**
  * A simple predator-prey simulator, based on a rectangular field containing 
- * rabbits and foxes.
+ * fish, barracudas, and sharks.
  * 
  * @author David J. Barnes and Michael Kölling
  * @version 7.1
@@ -14,10 +14,17 @@ public class Simulator
     private static final int DEFAULT_WIDTH = 120;
     // The default depth of the grid.
     private static final int DEFAULT_DEPTH = 80;
-    // The probability that a fox will be created in any given grid position.
-    private static final double FOX_CREATION_PROBABILITY = 0.02;
-    // The probability that a rabbit will be created in any given position.
-    private static final double RABBIT_CREATION_PROBABILITY = 0.08;    
+    // The probability that a barracuda will be created in any given grid position.
+    private static final double BARRACUDA_CREATION_PROBABILITY = 0.02;
+    // The probability that a shark will be created in any given grid position.
+    private static final double SHARK_CREATION_PROBABILITY = 0.01;
+    // The probability that a goldfish will be created in any given position.
+    private static final double GOLDFISH_CREATION_PROBABILITY = 0.08;  
+    // The probability that a tuna will be created in any given position.
+    private static final double TUNA_CREATION_PROBABILITY = 0.015;
+    // The probability that a parrotfish will be created in any given position.
+    private static final double PARROTFISH_CREATION_PROBABILITY = 0.06;    
+
 
     // The current state of the field.
     private Field field;
@@ -79,13 +86,11 @@ public class Simulator
     
     /**
      * Run the simulation from its current state for a single step.
-     * Iterate over the whole field updating the state of each fox and rabbit.
+     * Iterate over the whole field updating the state of each animal.
      */
     public void simulateOneStep()
     {
         step++;
-        // Use a separate Field to store the starting state of
-        // the next step.
         Field nextFieldState = new Field(field.getDepth(), field.getWidth());
 
         List<Animal> animals = field.getAnimals();
@@ -93,9 +98,7 @@ public class Simulator
             anAnimal.act(field, nextFieldState);
         }
         
-        // Replace the old state with the new one.
         field = nextFieldState;
-
         reportStats();
         view.showStatus(step, field);
     }
@@ -111,7 +114,7 @@ public class Simulator
     }
     
     /**
-     * Randomly populate the field with foxes and rabbits.
+     * Randomly populate the field with barracudas, sharks and rabbits.
      */
     private void populate()
     {
@@ -119,15 +122,27 @@ public class Simulator
         field.clear();
         for(int row = 0; row < field.getDepth(); row++) {
             for(int col = 0; col < field.getWidth(); col++) {
-                if(rand.nextDouble() <= FOX_CREATION_PROBABILITY) {
-                    Location location = new Location(row, col);
-                    Fox fox = new Fox(true, location);
-                    field.placeAnimal(fox, location);
+                Location location = new Location(row, col);
+                
+                if(rand.nextDouble() <= SHARK_CREATION_PROBABILITY) {
+                    Shark shark = new Shark(true, location);
+                    field.placeAnimal(shark, location);
                 }
-                else if(rand.nextDouble() <= RABBIT_CREATION_PROBABILITY) {
-                    Location location = new Location(row, col);
-                    Rabbit rabbit = new Rabbit(true, location);
-                    field.placeAnimal(rabbit, location);
+                else if(rand.nextDouble() <= BARRACUDA_CREATION_PROBABILITY) {
+                    Barracuda barracuda = new Barracuda(true, location);
+                    field.placeAnimal(barracuda, location);
+                }
+                else if(rand.nextDouble() <= TUNA_CREATION_PROBABILITY) {
+                    Tuna tuna = new Tuna(true, location);
+                    field.placeAnimal(tuna, location);
+                }
+                else if(rand.nextDouble() <= GOLDFISH_CREATION_PROBABILITY) {
+                    Goldfish goldfish = new Goldfish(true, location);
+                    field.placeAnimal(goldfish, location);
+                }
+                else if(rand.nextDouble() <= PARROTFISH_CREATION_PROBABILITY) {
+                    Parrotfish parrotfish = new Parrotfish(true, location);
+                    field.placeAnimal(parrotfish, location);
                 }
                 // else leave the location empty.
             }
@@ -139,7 +154,6 @@ public class Simulator
      */
     public void reportStats()
     {
-        //System.out.print("Step: " + step + " ");
         field.fieldStats();
     }
     
@@ -155,5 +169,15 @@ public class Simulator
         catch(InterruptedException e) {
             // ignore
         }
+    }
+
+    /**
+     * Main method to run the simulation.
+     * @param args Command line arguments (not used).
+     */
+    public static void main(String[] args)
+    {
+        Simulator simulator = new Simulator();
+        simulator.runLongSimulation();
     }
 }

@@ -113,60 +113,103 @@ public class Field
         return locations;
     }
 
-    /**
-     * Print out the number of foxes and rabbits in the field.
-     */
-    public void fieldStats()
-    {
-        int numFoxes = 0, numRabbits = 0;
-        for(Animal anAnimal : field.values()) {
-            if(anAnimal instanceof Fox fox) {
-                if(fox.isAlive()) {
-                    numFoxes++;
-                }
-            }
-            else if(anAnimal instanceof Rabbit rabbit) {
-                if(rabbit.isAlive()) {
-                    numRabbits++;
-                }
+/**
+ * Print out the number of all species in the field.
+ */
+public void fieldStats()
+{
+    int numSharks = 0, numBarracudas = 0, numGoldfish = 0;
+    int numTuna = 0, numParrotfish = 0;
+    
+    for(Animal anAnimal : field.values()) {
+        if(anAnimal instanceof Shark shark) {
+            if(shark.isAlive()) {
+                numSharks++;
             }
         }
-        System.out.println("Rabbits: " + numRabbits +
-                           " Foxes: " + numFoxes);
-    }
-
-    /**
-     * Empty the field.
-     */
-    public void clear()
-    {
-        field.clear();
-    }
-
-    /**
-     * Return whether there is at least one rabbit and one fox in the field.
-     * @return true if there is at least one rabbit and one fox in the field.
-     */
-    public boolean isViable()
-    {
-        boolean rabbitFound = false;
-        boolean foxFound = false;
-        Iterator<Animal> it = animals.iterator();
-        while(it.hasNext() && ! (rabbitFound && foxFound)) {
-            Animal anAnimal = it.next();
-            if(anAnimal instanceof Rabbit rabbit) {
-                if(rabbit.isAlive()) {
-                    rabbitFound = true;
-                }
-            }
-            else if(anAnimal instanceof Fox fox) {
-                if(fox.isAlive()) {
-                    foxFound = true;
-                }
+        else if(anAnimal instanceof Barracuda barracuda) {
+            if(barracuda.isAlive()) {
+                numBarracudas++;
             }
         }
-        return rabbitFound && foxFound;
+        else if(anAnimal instanceof Tuna tuna) {
+            if(tuna.isAlive()) {
+                numTuna++;
+            }
+        }
+        else if(anAnimal instanceof Goldfish goldfish) {
+            if(goldfish.isAlive()) {
+                numGoldfish++;
+            }
+        }
+        else if(anAnimal instanceof Parrotfish parrotfish) {
+            if(parrotfish.isAlive()) {
+                numParrotfish++;
+            }
+        }
     }
+    System.out.println("Goldfish: " + numGoldfish +
+                     " Barracudas: " + numBarracudas +
+                     " Sharks: " + numSharks +
+                     " Tuna: " + numTuna +
+                     " Parrotfish: " + numParrotfish);
+}
+ 
+     /**
+      * Empty the field.
+      */
+     public void clear()
+     {
+         field.clear();
+         animals.clear();
+     }
+ 
+    /**
+ * Return whether there is at least one of each species in the field.
+ * @return true if there is at least one of each species in the field.
+ */
+public boolean isViable()
+{
+    boolean goldfishFound = false;
+    boolean barracudaFound = false;
+    boolean sharkFound = false;
+    boolean tunaFound = false;
+    boolean parrotfishFound = false;
+    
+    Iterator<Animal> it = animals.iterator();
+    while(it.hasNext() && 
+          !(goldfishFound && barracudaFound && sharkFound && 
+            tunaFound && parrotfishFound)) {
+        Animal anAnimal = it.next();
+        if(anAnimal instanceof Goldfish goldfish) {
+            if(goldfish.isAlive()) {
+                goldfishFound = true;
+            }
+        }
+        else if(anAnimal instanceof Barracuda barracuda) {
+            if(barracuda.isAlive()) {
+                barracudaFound = true;
+            }
+        }
+        else if(anAnimal instanceof Shark shark) {
+            if(shark.isAlive()) {
+                sharkFound = true;
+            }
+        }
+        else if(anAnimal instanceof Tuna tuna) {
+            if(tuna.isAlive()) {
+                tunaFound = true;
+            }
+        }
+        else if(anAnimal instanceof Parrotfish parrotfish) {
+            if(parrotfish.isAlive()) {
+                parrotfishFound = true;
+            }
+        }
+    }
+    return goldfishFound && barracudaFound && sharkFound && 
+           tunaFound && parrotfishFound;
+}
     
     /**
      * Get the list of animals.
