@@ -13,10 +13,10 @@ public class Shark extends Animal
 {
     // Characteristics shared by all sharks (class variables).
     private static final int BREEDING_AGE = 15;                    // Increased breeding age
-    private static final int MAX_AGE = 150;                       // Increased lifespan
-    private static final double BREEDING_PROBABILITY = 0.05;      // Reduced breeding probability
+    private static final int MAX_AGE = 100;                       // Increased lifespan
+    private static final double BREEDING_PROBABILITY = 0.08;      // Reduced breeding probability
     private static final int MAX_LITTER_SIZE = 2;                 // Reduced litter size
-    private static final int FISH_FOOD_VALUE = 12;                // Increased food value
+    private static final int FISH_FOOD_VALUE = 15;                // Increased food value
     
     // A shared random number generator to control breeding.
     private static final Random rand = Randomizer.getRandom();

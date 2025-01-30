@@ -14,9 +14,9 @@ public class Barracuda extends Animal
     // Characteristics shared by all barracudas (class variables).
     private static final int BREEDING_AGE = 8;                    // Moderate breeding age
     private static final int MAX_AGE = 100;                       // Good lifespan
-    private static final double BREEDING_PROBABILITY = 0.06;      // Moderate breeding rate
+    private static final double BREEDING_PROBABILITY = 0.10;      // Moderate breeding rate
     private static final int MAX_LITTER_SIZE = 3;                 // Moderate litter size
-    private static final int FISH_FOOD_VALUE = 9;                 // Good food value
+    private static final int FISH_FOOD_VALUE = 12;                 // Good food value
     
     // A shared random number generator to control breeding.
     private static final Random rand = Randomizer.getRandom();
