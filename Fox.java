@@ -1,5 +1,5 @@
-import java.util.List;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -135,9 +135,9 @@ public class Fox extends Animal
         while(foodLocation == null && it.hasNext()) {
             Location loc = it.next();
             Animal animal = field.getAnimalAt(loc);
-            if(animal instanceof Rabbit rabbit) {
-                if(rabbit.isAlive()) {
-                    rabbit.setDead();
+            if(animal instanceof Goldfish goldfish) {
+                if(goldfish.isAlive()) {
+                    goldfish.setDead();
                     foodLevel = RABBIT_FOOD_VALUE;
                     foodLocation = loc;
                 }
