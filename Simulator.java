@@ -15,10 +15,11 @@ public class Simulator
     // The default depth of the grid.
     private static final int DEFAULT_DEPTH = 80;
 
-    private static final double SHARK_CREATION_PROBABILITY = 0.03;      // Reduced - apex predator
-    private static final double BARRACUDA_CREATION_PROBABILITY = 0.02;  // Keep same
+// Population probabilities
+private static final double SHARK_CREATION_PROBABILITY = 0.025;      // Fewer apex predators
+private static final double BARRACUDA_CREATION_PROBABILITY = 0.025;  // Medium predators
+private static final double TUNA_CREATION_PROBABILITY = 0.15;       // More prey
     private static final double GOLDFISH_CREATION_PROBABILITY = 0.01;   // Increased prey population
-    private static final double TUNA_CREATION_PROBABILITY = 0.10;       // Increased medium prey
     private static final double PARROTFISH_CREATION_PROBABILITY = 0.01; // Increased prey population
     
     // The current state of the field.

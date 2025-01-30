@@ -11,14 +11,11 @@ import java.util.Random;
 public class Tuna extends Animal
 {
     // Characteristics shared by all tunas (class variables).
-    // The age at which a tuna can start to breed.
-    private static final int BREEDING_AGE = 2;
-    // The age to which a tuna can live.
-    private static final int MAX_AGE = 40;
-    // The likelihood of a tuna breeding.
-    private static final double BREEDING_PROBABILITY = 0.05;
-    // The maximum number of births.
-    private static final int MAX_LITTER_SIZE = 4;
+// Tuna parameters
+private static final int BREEDING_AGE = 6;                    // Fast breeding
+private static final int MAX_AGE = 80;                       // Shorter life
+private static final double BREEDING_PROBABILITY = 0.4;       // Higher breed rate
+private static final int MAX_LITTER_SIZE = 3;                // Larger litters
     // A shared random number generator to control breeding.
     private static final Random rand = Randomizer.getRandom();
     
@@ -77,6 +74,7 @@ public class Tuna extends Animal
                 "age=" + age +
                 ", alive=" + isAlive() +
                 ", location=" + getLocation() +
+                ", gender=" + getGender() +
                 '}';
     }
 
@@ -101,7 +99,7 @@ public class Tuna extends Animal
     {
         // New tunas are born into adjacent locations.
         // Get a list of adjacent free locations.
-        int births = breed();
+        int births = breed(nextFieldState);
         if(births > 0) {
             for (int b = 0; b < births && !freeLocations.isEmpty(); b++) {
                 Location loc = freeLocations.remove(0);
@@ -116,16 +114,37 @@ public class Tuna extends Animal
      * if it can breed.
      * @return The number of births (may be zero).
      */
-    private int breed()
+    private int breed(Field field)
     {
-        int births;
-        if(canBreed() && rand.nextDouble() <= BREEDING_PROBABILITY) {
-            births = rand.nextInt(MAX_LITTER_SIZE) + 1;
-        }
-        else {
-            births = 0;
+        int births = 0;
+        if(canBreed()) {
+            // Look for mate of opposite gender
+            Tuna mate = findMatingPartner(field);
+            if(mate != null && rand.nextDouble() <= BREEDING_PROBABILITY) {
+                births = rand.nextInt(MAX_LITTER_SIZE) + 1;
+            }
         }
         return births;
+    }
+    
+    /**
+     * Find adjacent tuna of opposite gender.
+     * @param field The field with tunas
+     * @return Tuna of opposite gender or null
+     */
+    private Tuna findMatingPartner(Field field) 
+    {
+        List<Location> adjacent = field.getAdjacentLocations(getLocation());
+        for(Location where : adjacent) {
+            Object animal = field.getAnimalAt(where);
+            if(animal instanceof Tuna) {
+                Tuna other = (Tuna) animal;
+                if (other.canBreed() && other.getGender() != this.getGender()) {
+                    return other;
+                }
+            }
+        }
+        return null;
     }
 
     /**

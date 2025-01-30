@@ -12,11 +12,12 @@ import java.util.Random;
 public class Shark extends Animal
 {
     // Characteristics shared by all sharks (class variables).
-    private static final int BREEDING_AGE = 5;                    // Increased breeding age
-    private static final int MAX_AGE = 100;                       // Increased lifespan
-    private static final double BREEDING_PROBABILITY = 0.4;      // Reduced breeding probability
-    private static final int MAX_LITTER_SIZE = 5;                 // Reduced litter size
-    private static final int FISH_FOOD_VALUE = 17; // Increased from 15    
+// Shark parameters
+private static final int BREEDING_AGE = 8;                    // Medium breeding age
+private static final int MAX_AGE = 150;                       // Medium lifespan
+private static final double BREEDING_PROBABILITY = 0.8;      // Medium breed rate
+private static final int MAX_LITTER_SIZE = 2;                // Small litters
+private static final int FISH_FOOD_VALUE = 25;               // Good food value
     // A shared random number generator to control breeding.
     private static final Random rand = Randomizer.getRandom();
     

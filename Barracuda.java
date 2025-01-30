@@ -12,11 +12,12 @@ import java.util.Random;
 public class Barracuda extends Animal
 {
     // Characteristics shared by all barracudas (class variables).
-    private static final int BREEDING_AGE = 8;                    // Moderate breeding age
-    private static final int MAX_AGE = 100;                       // Good lifespan
-    private static final double BREEDING_PROBABILITY = 0.10;      // Moderate breeding rate
-    private static final int MAX_LITTER_SIZE = 3;                 // Moderate litter size
-    private static final int FISH_FOOD_VALUE = 12;                 // Good food value
+// Barracuda parameters  
+private static final int BREEDING_AGE = 8;                    // Medium breeding age
+private static final int MAX_AGE = 150;                       // Medium lifespan
+private static final double BREEDING_PROBABILITY = 0.8;      // Medium breed rate
+private static final int MAX_LITTER_SIZE = 2;                // Small litters
+private static final int FISH_FOOD_VALUE = 25;               // Good food value
     
     // A shared random number generator to control breeding.
     private static final Random rand = Randomizer.getRandom();
@@ -88,6 +89,7 @@ public class Barracuda extends Animal
                 ", alive=" + isAlive() +
                 ", location=" + getLocation() +
                 ", foodLevel=" + foodLevel +
+                ", gender=" + getGender() +
                 '}';
     }
 
@@ -146,7 +148,7 @@ public class Barracuda extends Animal
     private void giveBirth(Field nextFieldState, List<Location> freeLocations)
     {
         // New barracudas are born into adjacent locations.
-        int births = breed();
+        int births = breed(nextFieldState);
         if(births > 0) {
             for (int b = 0; b < births && ! freeLocations.isEmpty(); b++) {
                 Location loc = freeLocations.remove(0);
@@ -161,16 +163,37 @@ public class Barracuda extends Animal
      * if it can breed.
      * @return The number of births (may be zero).
      */
-    private int breed()
+    private int breed(Field field)
     {
-        int births;
-        if(canBreed() && rand.nextDouble() <= BREEDING_PROBABILITY) {
-            births = rand.nextInt(MAX_LITTER_SIZE) + 1;
-        }
-        else {
-            births = 0;
+        int births = 0;
+        if(canBreed()) {
+            // Look for mate of opposite gender
+            Barracuda mate = findMatingPartner(field);
+            if(mate != null && rand.nextDouble() <= BREEDING_PROBABILITY) {
+                births = rand.nextInt(MAX_LITTER_SIZE) + 1;
+            }
         }
         return births;
+    }
+
+        /**
+     * Find adjacent shark of opposite gender.
+     * @param field The field with sharks
+     * @return Shark of opposite gender or null
+     */
+    private Barracuda findMatingPartner(Field field) 
+    {
+        List<Location> adjacent = field.getAdjacentLocations(getLocation());
+        for(Location where : adjacent) {
+            Object animal = field.getAnimalAt(where);
+            if(animal instanceof Barracuda) {
+                Barracuda other = (Barracuda) animal;
+                if (other.canBreed() && other.getGender() != this.getGender()) {
+                    return other;
+                }
+            }
+        }
+        return null;
     }
 
     /**
