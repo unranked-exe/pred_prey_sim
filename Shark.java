@@ -12,17 +12,12 @@ import java.util.Random;
 public class Shark extends Animal
 {
     // Characteristics shared by all sharks (class variables).
-    // The age at which a shark can start to breed.
-    private static final int BREEDING_AGE = 10;
-    // The age to which a shark can live.
-    private static final int MAX_AGE = 100;
-    // The likelihood of a shark breeding.
-    private static final double BREEDING_PROBABILITY = 0.08;
-    // The maximum number of births.
-    private static final int MAX_LITTER_SIZE = 3;
-    // The food value of a single fish. In effect, this is the
-    // number of steps a shark can go before it has to eat again.
-    private static final int FISH_FOOD_VALUE = 9;
+    private static final int BREEDING_AGE = 15;                    // Increased breeding age
+    private static final int MAX_AGE = 150;                       // Increased lifespan
+    private static final double BREEDING_PROBABILITY = 0.05;      // Reduced breeding probability
+    private static final int MAX_LITTER_SIZE = 2;                 // Reduced litter size
+    private static final int FISH_FOOD_VALUE = 12;                // Increased food value
+    
     // A shared random number generator to control breeding.
     private static final Random rand = Randomizer.getRandom();
     

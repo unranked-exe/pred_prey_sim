@@ -12,17 +12,12 @@ import java.util.Random;
 public class Barracuda extends Animal
 {
     // Characteristics shared by all barracudas (class variables).
-    // The age at which a barracuda can start to breed.
-    private static final int BREEDING_AGE = 4;
-    // The age to which a barracuda can live.
-    private static final int MAX_AGE = 18;
-    // The likelihood of a barracuda breeding.
-    private static final double BREEDING_PROBABILITY = 0.08;
-    // The maximum number of births.
-    private static final int MAX_LITTER_SIZE = 4;
-    // The food value of a single fish. In effect, this is the
-    // number of steps a barracuda can go before it has to eat again.
-    private static final int FISH_FOOD_VALUE = 7;
+    private static final int BREEDING_AGE = 8;                    // Moderate breeding age
+    private static final int MAX_AGE = 100;                       // Good lifespan
+    private static final double BREEDING_PROBABILITY = 0.06;      // Moderate breeding rate
+    private static final int MAX_LITTER_SIZE = 3;                 // Moderate litter size
+    private static final int FISH_FOOD_VALUE = 9;                 // Good food value
+    
     // A shared random number generator to control breeding.
     private static final Random rand = Randomizer.getRandom();
     

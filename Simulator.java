@@ -14,18 +14,13 @@ public class Simulator
     private static final int DEFAULT_WIDTH = 120;
     // The default depth of the grid.
     private static final int DEFAULT_DEPTH = 80;
-    // The probability that a barracuda will be created in any given grid position.
-    private static final double BARRACUDA_CREATION_PROBABILITY = 0.02;
-    // The probability that a shark will be created in any given grid position.
-    private static final double SHARK_CREATION_PROBABILITY = 0.02;
-    // The probability that a goldfish will be created in any given position.
-    private static final double GOLDFISH_CREATION_PROBABILITY = 0.08;  
-    // The probability that a tuna will be created in any given position.
-    private static final double TUNA_CREATION_PROBABILITY = 0.015;
-    // The probability that a parrotfish will be created in any given position.
-    private static final double PARROTFISH_CREATION_PROBABILITY = 0.06;    
 
-
+    private static final double SHARK_CREATION_PROBABILITY = 0.02;      // Reduced - apex predator
+    private static final double BARRACUDA_CREATION_PROBABILITY = 0.02;  // Keep same
+    private static final double GOLDFISH_CREATION_PROBABILITY = 0.10;   // Increased prey population
+    private static final double TUNA_CREATION_PROBABILITY = 0.01;       // Increased medium prey
+    private static final double PARROTFISH_CREATION_PROBABILITY = 0.08; // Increased prey population
+    
     // The current state of the field.
     private Field field;
     // The current step of the simulation.
