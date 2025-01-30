@@ -7,10 +7,18 @@
  */
 public abstract class Animal
 {
+
+    // Gender enum
+    public enum Gender {
+        MALE,FEMALE
+    }
+
     // Whether the animal is alive or not.
     private boolean alive;
     // The animal's position.
     private Location location;
+    // The animal's gender.
+    private Gender gender;
 
     /**
      * Constructor for objects of class Animal.
@@ -20,6 +28,16 @@ public abstract class Animal
     {
         this.alive = true;
         this.location = location;
+        this.gender = Math.random() < 0.5 ? Gender.MALE : Gender.FEMALE;
+    }
+
+    /**
+     * Get the animal's gender.
+     * @return The animal's gender.
+     */
+    public Gender getGender()
+    {
+        return gender;
     }
     
     /**

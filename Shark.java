@@ -12,12 +12,11 @@ import java.util.Random;
 public class Shark extends Animal
 {
     // Characteristics shared by all sharks (class variables).
-    private static final int BREEDING_AGE = 15;                    // Increased breeding age
+    private static final int BREEDING_AGE = 5;                    // Increased breeding age
     private static final int MAX_AGE = 100;                       // Increased lifespan
-    private static final double BREEDING_PROBABILITY = 0.08;      // Reduced breeding probability
-    private static final int MAX_LITTER_SIZE = 2;                 // Reduced litter size
-    private static final int FISH_FOOD_VALUE = 15;                // Increased food value
-    
+    private static final double BREEDING_PROBABILITY = 0.4;      // Reduced breeding probability
+    private static final int MAX_LITTER_SIZE = 5;                 // Reduced litter size
+    private static final int FISH_FOOD_VALUE = 17; // Increased from 15    
     // A shared random number generator to control breeding.
     private static final Random rand = Randomizer.getRandom();
     
@@ -26,6 +25,7 @@ public class Shark extends Animal
     private int age;
     // The shark's food level, which is increased by eating fish.
     private int foodLevel;
+    
 
     /**
      * Create a shark. A shark can be created as a new born (age zero
@@ -88,9 +88,11 @@ public class Shark extends Animal
                 ", alive=" + isAlive() +
                 ", location=" + getLocation() +
                 ", foodLevel=" + foodLevel +
+                ", gender=" + getGender() +
                 '}';
     }
 
+    
     /**
      * Increase the age. This could result in the shark's death.
      */
@@ -145,10 +147,10 @@ public class Shark extends Animal
      */
     private void giveBirth(Field nextFieldState, List<Location> freeLocations)
     {
-        // New sharks are born into adjacent locations.
-        int births = breed();
+        // Call breed with the current field
+        int births = breed(nextFieldState);
         if(births > 0) {
-            for (int b = 0; b < births && ! freeLocations.isEmpty(); b++) {
+            for (int b = 0; b < births && !freeLocations.isEmpty(); b++) {
                 Location loc = freeLocations.remove(0);
                 Shark young = new Shark(false, loc);
                 nextFieldState.placeAnimal(young, loc);
@@ -161,16 +163,37 @@ public class Shark extends Animal
      * if it can breed.
      * @return The number of births (may be zero).
      */
-    private int breed()
+    private int breed(Field field)
     {
-        int births;
-        if(canBreed() && rand.nextDouble() <= BREEDING_PROBABILITY) {
-            births = rand.nextInt(MAX_LITTER_SIZE) + 1;
-        }
-        else {
-            births = 0;
+        int births = 0;
+        if(canBreed()) {
+            // Look for mate of opposite gender
+            Shark mate = findMatingPartner(field);
+            if(mate != null && rand.nextDouble() <= BREEDING_PROBABILITY) {
+                births = rand.nextInt(MAX_LITTER_SIZE) + 1;
+            }
         }
         return births;
+    }
+    
+    /**
+     * Find adjacent shark of opposite gender.
+     * @param field The field with sharks
+     * @return Shark of opposite gender or null
+     */
+    private Shark findMatingPartner(Field field) 
+    {
+        List<Location> adjacent = field.getAdjacentLocations(getLocation());
+        for(Location where : adjacent) {
+            Object animal = field.getAnimalAt(where);
+            if(animal instanceof Shark) {
+                Shark other = (Shark) animal;
+                if (other.canBreed() && other.getGender() != this.getGender()) {
+                    return other;
+                }
+            }
+        }
+        return null;
     }
 
     /**
