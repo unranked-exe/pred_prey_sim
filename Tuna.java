@@ -11,11 +11,11 @@ import java.util.Random;
 public class Tuna extends Animal
 {
     // Characteristics shared by all tunas (class variables).
-// Tuna parameters
-private static final int BREEDING_AGE = 6;                    // Fast breeding
-private static final int MAX_AGE = 80;                       // Shorter life
-private static final double BREEDING_PROBABILITY = 0.4;       // Higher breed rate
-private static final int MAX_LITTER_SIZE = 3;                // Larger litters
+    // Tuna parameters
+    private static final int BREEDING_AGE = 6;                    // Fast breeding
+    private static final int MAX_AGE = 80;                       // Shorter life
+    private static final double BREEDING_PROBABILITY = 0.4;       // Higher breed rate
+    private static final int MAX_LITTER_SIZE = 3;                // Larger litters
     // A shared random number generator to control breeding.
     private static final Random rand = Randomizer.getRandom();
     
@@ -31,9 +31,9 @@ private static final int MAX_LITTER_SIZE = 3;                // Larger litters
      * @param randomAge If true, the tuna will have a random age.
      * @param location The location within the field.
      */
-    public Tuna(boolean randomAge, Location location)
+    public Tuna(boolean randomAge, Location location, Simulator simulator)
     {
-        super(location);
+        super(location, simulator);
         age = 0;
         if(randomAge) {
             age = rand.nextInt(MAX_AGE);
@@ -50,20 +50,25 @@ private static final int MAX_LITTER_SIZE = 3;                // Larger litters
     {
         incrementAge();
         if(isAlive()) {
-            List<Location> freeLocations = 
-                nextFieldState.getFreeAdjacentLocations(getLocation());
-            if(!freeLocations.isEmpty()) {
-                giveBirth(nextFieldState, freeLocations);
-            }
-            // Try to move into a free location.
-            if(! freeLocations.isEmpty()) {
-                Location nextLocation = freeLocations.get(0);
-                setLocation(nextLocation);
-                nextFieldState.placeAnimal(this, nextLocation);
-            }
-            else {
-                // Overcrowding.
-                setDead();
+
+            int hour = simulator.getTimeOfDay();
+
+            if(hour>= 0 || hour <=12) {  // Only move and breed during day time
+                List<Location> freeLocations = 
+                    nextFieldState.getFreeAdjacentLocations(getLocation());
+                if(!freeLocations.isEmpty()) {
+                    giveBirth(nextFieldState, freeLocations);
+                }
+                // Try to move into a free location.
+                if(!freeLocations.isEmpty()) {
+                    Location nextLocation = freeLocations.get(0);
+                    setLocation(nextLocation);
+                    nextFieldState.placeAnimal(this, nextLocation);
+                }
+                else {
+                    // Overcrowding.
+                    setDead();
+                }
             }
         }
     }
@@ -103,7 +108,7 @@ private static final int MAX_LITTER_SIZE = 3;                // Larger litters
         if(births > 0) {
             for (int b = 0; b < births && !freeLocations.isEmpty(); b++) {
                 Location loc = freeLocations.remove(0);
-                Tuna young = new Tuna(false, loc);
+                Tuna young = new Tuna(false, loc, simulator);
                 nextFieldState.placeAnimal(young, loc);
             }
         }

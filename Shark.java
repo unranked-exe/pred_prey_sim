@@ -35,9 +35,9 @@ private static final int FISH_FOOD_VALUE = 25;               // Good food value
      * @param randomAge If true, the shark will have random age and hunger level.
      * @param location The location within the field.
      */
-    public Shark(boolean randomAge, Location location)
+    public Shark(boolean randomAge, Location location, Simulator simulator)
     {
-        super(location);
+        super(location, simulator);
         if(randomAge) {
             age = rand.nextInt(MAX_AGE);
         }
@@ -153,7 +153,7 @@ private static final int FISH_FOOD_VALUE = 25;               // Good food value
         if(births > 0) {
             for (int b = 0; b < births && !freeLocations.isEmpty(); b++) {
                 Location loc = freeLocations.remove(0);
-                Shark young = new Shark(false, loc);
+                Shark young = new Shark(false, loc, simulator);
                 nextFieldState.placeAnimal(young, loc);
             }
         }

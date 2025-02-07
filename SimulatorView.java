@@ -13,8 +13,13 @@ import java.util.Map;
  * @author David J. Barnes and Michael Kölling
  * @version 7.0
  */
+
+
 public class SimulatorView extends JFrame
 {
+
+    private final Simulator simulator;
+
     // Colors used for empty locations.
     private static final Color EMPTY_COLOR = Color.white;
 
@@ -23,9 +28,11 @@ public class SimulatorView extends JFrame
 
     private final String STEP_PREFIX = "Step: ";
     private final String POPULATION_PREFIX = "Population: ";
+    private final String TIME_PREFIX = "Time: ";
     private final JLabel stepLabel;
     private final JLabel population;
     private final FieldView fieldView;
+    private final JLabel timeLabel;
     
     // A map for storing colors for participants in the simulation
     private final Map<Class<?>, Color> colors;
@@ -37,10 +44,11 @@ public class SimulatorView extends JFrame
      * @param height The simulation's height.
      * @param width  The simulation's width.
      */
-    public SimulatorView(int height, int width)
+    public SimulatorView(int height, int width, Simulator simulator)
     {
         stats = new FieldStats();
         colors = new LinkedHashMap<>();
+        this.simulator = simulator;
         setColor(Goldfish.class, Color.orange);
         setColor(Shark.class, Color.blue);
         setColor(Barracuda.class, Color.red);
@@ -50,6 +58,8 @@ public class SimulatorView extends JFrame
         setTitle("Ocean Simulation");
         stepLabel = new JLabel(STEP_PREFIX, JLabel.CENTER);
         population = new JLabel(POPULATION_PREFIX, JLabel.CENTER);
+
+        timeLabel = new JLabel(TIME_PREFIX, JLabel.CENTER);
         
         setLocation(100, 50);
         
@@ -59,6 +69,8 @@ public class SimulatorView extends JFrame
         contents.add(stepLabel, BorderLayout.NORTH);
         contents.add(fieldView, BorderLayout.CENTER);
         contents.add(population, BorderLayout.SOUTH);
+        contents.add(timeLabel, BorderLayout.NORTH);
+
         pack();
         setVisible(true);
     }
@@ -119,7 +131,13 @@ public class SimulatorView extends JFrame
         stats.countFinished();
 
         population.setText(POPULATION_PREFIX + stats.getPopulationDetails(field));
+        timeLabel.setText(TIME_PREFIX + formatTime(simulator.getTimeOfDay()));
         fieldView.repaint();
+
+    }
+
+    private String formatTime(int hour) {
+        return String.format("%02d:00", hour);
     }
 
     /**

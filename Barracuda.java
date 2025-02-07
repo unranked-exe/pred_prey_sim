@@ -35,9 +35,9 @@ private static final int FISH_FOOD_VALUE = 25;               // Good food value
      * @param randomAge If true, the barracuda will have random age and hunger level.
      * @param location The location within the field.
      */
-    public Barracuda(boolean randomAge, Location location)
+    public Barracuda(boolean randomAge, Location location, Simulator simulator)
     {
-        super(location);
+        super(location, simulator);
         if(randomAge) {
             age = rand.nextInt(MAX_AGE);
         }
@@ -152,7 +152,7 @@ private static final int FISH_FOOD_VALUE = 25;               // Good food value
         if(births > 0) {
             for (int b = 0; b < births && ! freeLocations.isEmpty(); b++) {
                 Location loc = freeLocations.remove(0);
-                Barracuda young = new Barracuda(false, loc);
+                Barracuda young = new Barracuda(false, loc, simulator);
                 nextFieldState.placeAnimal(young, loc);
             }
         }

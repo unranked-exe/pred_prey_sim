@@ -4,7 +4,7 @@ import java.util.*;
  * A simple predator-prey simulator, based on a rectangular field containing 
  * fish, barracudas, and sharks.
  * 
- * @author David J. Barnes and Michael Kölling
+ * @author David J.
  * @version 7.1
  */
 public class Simulator
@@ -15,17 +15,24 @@ public class Simulator
     // The default depth of the grid.
     private static final int DEFAULT_DEPTH = 80;
 
-// Population probabilities
-private static final double SHARK_CREATION_PROBABILITY = 0.025;      // Fewer apex predators
-private static final double BARRACUDA_CREATION_PROBABILITY = 0.025;  // Medium predators
-private static final double TUNA_CREATION_PROBABILITY = 0.15;       // More prey
+    // Population probabilities
+    private static final double SHARK_CREATION_PROBABILITY = 0.025;      // Fewer apex predators
+    private static final double BARRACUDA_CREATION_PROBABILITY = 0.025;  // Medium predators
+    private static final double TUNA_CREATION_PROBABILITY = 0.15;       // More prey
     private static final double GOLDFISH_CREATION_PROBABILITY = 0.01;   // Increased prey population
     private static final double PARROTFISH_CREATION_PROBABILITY = 0.01; // Increased prey population
-    
+
+    // Time of day constants
+    private static final int DAY_START = 12;
+    private static final int DAY_END = 24;
+    private static final int HOURS_PER_STEP = 1;
+
     // The current state of the field.
     private Field field;
     // The current step of the simulation.
     private int step;
+    // The current time of day in the simulation.
+    private int timeOfDay;
     // A graphical view of the simulation.
     private final SimulatorView view;
 
@@ -52,7 +59,7 @@ private static final double TUNA_CREATION_PROBABILITY = 0.15;       // More prey
         }
         
         field = new Field(depth, width);
-        view = new SimulatorView(depth, width);
+        view = new SimulatorView(depth, width, this);
 
         reset();
     }
@@ -87,6 +94,7 @@ private static final double TUNA_CREATION_PROBABILITY = 0.15;       // More prey
     public void simulateOneStep()
     {
         step++;
+        timeOfDay = (timeOfDay + HOURS_PER_STEP) % DAY_END;
         Field nextFieldState = new Field(field.getDepth(), field.getWidth());
 
         List<Animal> animals = field.getAnimals();
@@ -105,10 +113,16 @@ private static final double TUNA_CREATION_PROBABILITY = 0.15;       // More prey
     public void reset()
     {
         step = 0;
+        timeOfDay = DAY_START;
         populate();
         view.showStatus(step, field);
     }
     
+
+    public int getTimeOfDay() {
+        return timeOfDay;
+    }
+
     /**
      * Randomly populate the field with barracudas, sharks and rabbits.
      */
@@ -121,23 +135,23 @@ private static final double TUNA_CREATION_PROBABILITY = 0.15;       // More prey
                 Location location = new Location(row, col);
                 
                 if(rand.nextDouble() <= SHARK_CREATION_PROBABILITY) {
-                    Shark shark = new Shark(true, location);
+                    Shark shark = new Shark(true, location, this);
                     field.placeAnimal(shark, location);
                 }
                 else if(rand.nextDouble() <= BARRACUDA_CREATION_PROBABILITY) {
-                    Barracuda barracuda = new Barracuda(true, location);
+                    Barracuda barracuda = new Barracuda(true, location, this);
                     field.placeAnimal(barracuda, location);
                 }
                 else if(rand.nextDouble() <= TUNA_CREATION_PROBABILITY) {
-                    Tuna tuna = new Tuna(true, location);
+                    Tuna tuna = new Tuna(true, location, this);
                     field.placeAnimal(tuna, location);
                 }
                 else if(rand.nextDouble() <= GOLDFISH_CREATION_PROBABILITY) {
-                    Goldfish goldfish = new Goldfish(true, location);
+                    Goldfish goldfish = new Goldfish(true, location, this);
                     field.placeAnimal(goldfish, location);
                 }
                 else if(rand.nextDouble() <= PARROTFISH_CREATION_PROBABILITY) {
-                    Parrotfish parrotfish = new Parrotfish(true, location);
+                    Parrotfish parrotfish = new Parrotfish(true, location, this);
                     field.placeAnimal(parrotfish, location);
                 }
                 // else leave the location empty.

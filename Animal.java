@@ -19,16 +19,21 @@ public abstract class Animal
     private Location location;
     // The animal's gender.
     private Gender gender;
+    
+    protected Simulator simulator;
+
 
     /**
      * Constructor for objects of class Animal.
      * @param location The animal's location.
      */
-    public Animal(Location location)
+    public Animal(Location location, Simulator simulator)
     {
         this.alive = true;
         this.location = location;
         this.gender = Math.random() < 0.5 ? Gender.MALE : Gender.FEMALE;
+        this.simulator = simulator;
+
     }
 
     /**
