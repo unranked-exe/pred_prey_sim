@@ -1,6 +1,6 @@
 
 /**
- * Common elements of foxes and rabbits.
+ * Common elements of all organisms in the simulation.
  *
  * @author David J. Barnes and Michael Kölling
  * @version 7.0
@@ -19,21 +19,19 @@ public abstract class Animal
     private Location location;
     // The animal's gender.
     private Gender gender;
-    
-    protected Simulator simulator;
+    // Allows for each animal to access a single instance of the simulator
+    protected static Simulator simulator;
 
 
     /**
      * Constructor for objects of class Animal.
      * @param location The animal's location.
      */
-    public Animal(Location location, Simulator simulator)
+    public Animal(Location location)
     {
         this.alive = true;
         this.location = location;
         this.gender = Math.random() < 0.5 ? Gender.MALE : Gender.FEMALE;
-        this.simulator = simulator;
-
     }
 
     /**
@@ -43,6 +41,24 @@ public abstract class Animal
     public Gender getGender()
     {
         return gender;
+    }
+
+    /**
+     * Set the simulator instance to be used by all animals.
+     * @param sim SImultor instance to be set.
+     */
+
+    public static void setSimulator(Simulator sim) {
+        simulator = sim;
+    }
+
+    /**
+     * Get the static simulator instance.
+     * @return The simulator instance.
+     */
+    protected static Simulator getSimulator()
+    {
+        return simulator;
     }
     
     /**

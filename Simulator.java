@@ -119,6 +119,11 @@ public class Simulator
     }
     
 
+    /**
+     * Get the current hour of the simulation
+     * in 24-hour format.
+     * @return The current hour of the simulation.
+     */
     public int getTimeOfDay() {
         return timeOfDay;
     }
@@ -128,6 +133,7 @@ public class Simulator
      */
     private void populate()
     {
+        Animal.setSimulator(this);
         Random rand = Randomizer.getRandom();
         field.clear();
         for(int row = 0; row < field.getDepth(); row++) {
@@ -135,23 +141,23 @@ public class Simulator
                 Location location = new Location(row, col);
                 
                 if(rand.nextDouble() <= SHARK_CREATION_PROBABILITY) {
-                    Shark shark = new Shark(true, location, this);
+                    Shark shark = new Shark(true, location);
                     field.placeAnimal(shark, location);
                 }
                 else if(rand.nextDouble() <= BARRACUDA_CREATION_PROBABILITY) {
-                    Barracuda barracuda = new Barracuda(true, location, this);
+                    Barracuda barracuda = new Barracuda(true, location);
                     field.placeAnimal(barracuda, location);
                 }
                 else if(rand.nextDouble() <= TUNA_CREATION_PROBABILITY) {
-                    Tuna tuna = new Tuna(true, location, this);
+                    Tuna tuna = new Tuna(true, location);
                     field.placeAnimal(tuna, location);
                 }
                 else if(rand.nextDouble() <= GOLDFISH_CREATION_PROBABILITY) {
-                    Goldfish goldfish = new Goldfish(true, location, this);
+                    Goldfish goldfish = new Goldfish(true, location);
                     field.placeAnimal(goldfish, location);
                 }
                 else if(rand.nextDouble() <= PARROTFISH_CREATION_PROBABILITY) {
-                    Parrotfish parrotfish = new Parrotfish(true, location, this);
+                    Parrotfish parrotfish = new Parrotfish(true, location);
                     field.placeAnimal(parrotfish, location);
                 }
                 // else leave the location empty.

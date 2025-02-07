@@ -34,9 +34,9 @@ public class Parrotfish extends Animal
      * @param randomAge If true, the parrotfish will have a random age.
      * @param location The location within the field.
      */
-    public Parrotfish(boolean randomAge, Location location, Simulator simulator)
+    public Parrotfish(boolean randomAge, Location location)
     {
-        super(location, simulator);
+        super(location);
         age = 0;
         if(randomAge) {
             age = rand.nextInt(MAX_AGE);
@@ -105,7 +105,7 @@ public class Parrotfish extends Animal
         if(births > 0) {
             for (int b = 0; b < births && !freeLocations.isEmpty(); b++) {
                 Location loc = freeLocations.remove(0);
-                Parrotfish young = new Parrotfish(false, loc, simulator);
+                Parrotfish young = new Parrotfish(false, loc);
                 nextFieldState.placeAnimal(young, loc);
             }
         }

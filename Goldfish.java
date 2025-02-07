@@ -34,9 +34,9 @@ public class Goldfish extends Animal
      * @param randomAge If true, the goldfish will have a random age.
      * @param location The location within the field.
      */
-    public Goldfish(boolean randomAge, Location location, Simulator simulator)
+    public Goldfish(boolean randomAge, Location location)
     {
-        super(location, simulator);
+        super(location);
         age = 0;
         if(randomAge) {
             age = rand.nextInt(MAX_AGE);
@@ -105,7 +105,7 @@ public class Goldfish extends Animal
         if(births > 0) {
             for (int b = 0; b < births && !freeLocations.isEmpty(); b++) {
                 Location loc = freeLocations.remove(0);
-                Goldfish young = new Goldfish(false, loc, simulator);
+                Goldfish young = new Goldfish(false, loc);
                 nextFieldState.placeAnimal(young, loc);
             }
         }

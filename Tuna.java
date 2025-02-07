@@ -31,9 +31,9 @@ public class Tuna extends Animal
      * @param randomAge If true, the tuna will have a random age.
      * @param location The location within the field.
      */
-    public Tuna(boolean randomAge, Location location, Simulator simulator)
+    public Tuna(boolean randomAge, Location location)
     {
-        super(location, simulator);
+        super(location);
         age = 0;
         if(randomAge) {
             age = rand.nextInt(MAX_AGE);
@@ -51,9 +51,9 @@ public class Tuna extends Animal
         incrementAge();
         if(isAlive()) {
 
-            int hour = simulator.getTimeOfDay();
+            int hour = getSimulator().getTimeOfDay();
 
-            if(hour>= 0 || hour <=12) {  // Only move and breed during day time
+            if(hour>= 5 && hour <= 20) {  // Only move and breed during day time
                 List<Location> freeLocations = 
                     nextFieldState.getFreeAdjacentLocations(getLocation());
                 if(!freeLocations.isEmpty()) {
@@ -108,7 +108,7 @@ public class Tuna extends Animal
         if(births > 0) {
             for (int b = 0; b < births && !freeLocations.isEmpty(); b++) {
                 Location loc = freeLocations.remove(0);
-                Tuna young = new Tuna(false, loc, simulator);
+                Tuna young = new Tuna(false, loc);
                 nextFieldState.placeAnimal(young, loc);
             }
         }
