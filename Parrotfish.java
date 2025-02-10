@@ -16,7 +16,7 @@ public class Parrotfish extends Animal
     // The age to which a parrotfish can live.
     private static final int MAX_AGE = 40;
     // The likelihood of a parrotfish breeding.
-    private static final double BREEDING_PROBABILITY = 0.02;
+    private static final double BREEDING_PROBABILITY = 0.05;
     // The maximum number of births.
     private static final int MAX_LITTER_SIZE = 4;
     // A shared random number generator to control breeding.
@@ -53,19 +53,30 @@ public class Parrotfish extends Animal
     {
         incrementAge();
         if(isAlive()) {
+            int hour = getSimulator().getTimeOfDay();
+            
+            // Always place the parrotfish in the next state
+            Location currentLocation = getLocation();
+            nextFieldState.placeAnimal(this, currentLocation);
+    
             List<Location> freeLocations = 
                 nextFieldState.getFreeAdjacentLocations(getLocation());
-            if(!freeLocations.isEmpty()) {
-                giveBirth(nextFieldState, freeLocations);
+                
+            // Breeding only during night time
+            if(hour <= 5 || hour >= 19) {
+                if(!freeLocations.isEmpty()) {
+                    giveBirth(nextFieldState, freeLocations);
+                }
             }
-            // Try to move into a free location.
-            if(! freeLocations.isEmpty()) {
+            
+            // Movement happens any time
+            if(!freeLocations.isEmpty()) {
                 Location nextLocation = freeLocations.get(0);
                 setLocation(nextLocation);
                 nextFieldState.placeAnimal(this, nextLocation);
             }
             else {
-                // Overcrowding.
+                // Overcrowding
                 setDead();
             }
         }

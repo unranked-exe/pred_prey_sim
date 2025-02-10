@@ -46,32 +46,35 @@ public class Tuna extends Animal
      * @param currentField The field occupied.
      * @param nextFieldState The updated field.
      */
-    public void act(Field currentField, Field nextFieldState)
-    {
-        incrementAge();
-        if(isAlive()) {
+public void act(Field currentField, Field nextFieldState)
+{
+    incrementAge();
+    if(isAlive()) {
+        int hour = getSimulator().getTimeOfDay();
+        
+        // Always place the tuna in the next state, even if it doesn't move
+        Location currentLocation = getLocation();
+        nextFieldState.placeAnimal(this, currentLocation);
 
-            int hour = getSimulator().getTimeOfDay();
-
-            if(hour>= 5 && hour <= 20) {  // Only move and breed during day time
-                List<Location> freeLocations = 
-                    nextFieldState.getFreeAdjacentLocations(getLocation());
-                if(!freeLocations.isEmpty()) {
-                    giveBirth(nextFieldState, freeLocations);
-                }
-                // Try to move into a free location.
-                if(!freeLocations.isEmpty()) {
-                    Location nextLocation = freeLocations.get(0);
-                    setLocation(nextLocation);
-                    nextFieldState.placeAnimal(this, nextLocation);
-                }
-                else {
-                    // Overcrowding.
-                    setDead();
-                }
+        if(hour >= 5 && hour <= 20) {  // Only move and breed during day time
+            List<Location> freeLocations = 
+                nextFieldState.getFreeAdjacentLocations(getLocation());
+            if(!freeLocations.isEmpty()) {
+                giveBirth(nextFieldState, freeLocations);
+            }
+            // Try to move into a free location.
+            if(!freeLocations.isEmpty()) {
+                Location nextLocation = freeLocations.get(0);
+                setLocation(nextLocation);
+                nextFieldState.placeAnimal(this, nextLocation);
+            }
+            else {
+                // Overcrowding only checks during active hours
+                setDead();
             }
         }
     }
+}
 
     @Override
     public String toString() {

@@ -53,21 +53,32 @@ public class Goldfish extends Animal
     {
         incrementAge();
         if(isAlive()) {
+            int hour = getSimulator().getTimeOfDay();
+            
+            // Always place the parrotfish in the next state
+            Location currentLocation = getLocation();
+            nextFieldState.placeAnimal(this, currentLocation);
+    
             List<Location> freeLocations = 
                 nextFieldState.getFreeAdjacentLocations(getLocation());
+                
+
             if(!freeLocations.isEmpty()) {
                 giveBirth(nextFieldState, freeLocations);
             }
-            // Try to move into a free location.
-            if(! freeLocations.isEmpty()) {
+            
+            // Moving only during night time
+            if(hour <= 5 || hour >= 19) {
+            if(!freeLocations.isEmpty()) {
                 Location nextLocation = freeLocations.get(0);
                 setLocation(nextLocation);
                 nextFieldState.placeAnimal(this, nextLocation);
             }
             else {
-                // Overcrowding.
+                // Overcrowding
                 setDead();
             }
+        }
         }
     }
 
