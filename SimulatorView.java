@@ -33,6 +33,8 @@ public class SimulatorView extends JFrame
     private final JLabel population;
     private final FieldView fieldView;
     private final JLabel timeLabel;
+    public final String WEATHER_PREFIX = "Weather: ";
+    private final JLabel weatherLabel;
     
     // A map for storing colors for participants in the simulation
     private final Map<Class<?>, Color> colors;
@@ -58,7 +60,7 @@ public class SimulatorView extends JFrame
         setTitle("Ocean Simulation");
         stepLabel = new JLabel(STEP_PREFIX, JLabel.CENTER);
         population = new JLabel(POPULATION_PREFIX, JLabel.CENTER);
-
+        weatherLabel = new JLabel(WEATHER_PREFIX, JLabel.CENTER);
         timeLabel = new JLabel(TIME_PREFIX, JLabel.CENTER);
         
         setLocation(100, 50);
@@ -66,10 +68,19 @@ public class SimulatorView extends JFrame
         fieldView = new FieldView(height, width);
 
         Container contents = getContentPane();
-        contents.add(stepLabel, BorderLayout.NORTH);
+        //Fixed only one element allowed on each panel
+        JPanel northPanel = new JPanel(new FlowLayout());
+        northPanel.add(timeLabel);
+        northPanel.add(weatherLabel);
+    
+        JPanel southPanel = new JPanel(new FlowLayout());
+        southPanel.add(stepLabel);
+        southPanel.add(population);
+    
+        contents.add(northPanel, BorderLayout.NORTH);
         contents.add(fieldView, BorderLayout.CENTER);
-        contents.add(population, BorderLayout.SOUTH);
-        contents.add(timeLabel, BorderLayout.NORTH);
+        contents.add(southPanel, BorderLayout.SOUTH);
+
 
         pack();
         setVisible(true);
@@ -132,6 +143,7 @@ public class SimulatorView extends JFrame
 
         population.setText(POPULATION_PREFIX + stats.getPopulationDetails(field));
         timeLabel.setText(TIME_PREFIX + formatTime(simulator.getTimeOfDay()));
+        weatherLabel.setText(WEATHER_PREFIX + simulator.getWeather().getCondition());
         fieldView.repaint();
 
     }

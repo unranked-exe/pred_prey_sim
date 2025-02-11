@@ -36,6 +36,9 @@ public class Simulator
     // A graphical view of the simulation.
     private final SimulatorView view;
 
+    // Weather
+    private Weather weather;
+
     /**
      * Construct a simulation field with default size.
      */
@@ -60,6 +63,7 @@ public class Simulator
         
         field = new Field(depth, width);
         view = new SimulatorView(depth, width, this);
+        weather = new Weather();
 
         reset();
     }
@@ -95,16 +99,28 @@ public class Simulator
     {
         step++;
         timeOfDay = (timeOfDay + HOURS_PER_STEP) % DAY_END;
+
+        weather.update();
+
         Field nextFieldState = new Field(field.getDepth(), field.getWidth());
+
+        boolean reducedVision = weather.getCondition() == Weather.Condition.FOGGY;
 
         List<Animal> animals = field.getAnimals();
         for (Animal anAnimal : animals) {
+            if (reducedVision && (anAnimal instanceof Shark || anAnimal instanceof Barracuda)) {
+                continue;
+            }
             anAnimal.act(field, nextFieldState);
         }
         
         field = nextFieldState;
         reportStats();
         view.showStatus(step, field);
+    }
+
+    public Weather getWeather() {
+        return weather;
     }
         
     /**
