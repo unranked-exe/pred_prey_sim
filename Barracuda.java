@@ -54,7 +54,8 @@ private static final int FISH_FOOD_VALUE = 25;               // Good food value
      * @param currentField The field currently occupied.
      * @param nextFieldState The updated field.
      */
-    public void act(Field currentField, Field nextFieldState)
+    @Override
+     public void act(Field currentField, Field nextFieldState)
     {
         incrementAge();
         incrementHunger();
@@ -73,7 +74,7 @@ private static final int FISH_FOOD_VALUE = 25;               // Good food value
             // See if it was possible to move.
             if(nextLocation != null) {
                 setLocation(nextLocation);
-                nextFieldState.placeAnimal(this, nextLocation);
+                nextFieldState.placeOrganism(this, nextLocation);
             }
             else {
                 // Overcrowding.
@@ -128,7 +129,7 @@ private static final int FISH_FOOD_VALUE = 25;               // Good food value
         Location foodLocation = null;
         while(foodLocation == null && it.hasNext()) {
             Location loc = it.next();
-            Animal animal = field.getAnimalAt(loc);
+            Organism animal = field.getAnimalAt(loc);
             if(animal instanceof Tuna fish) {
                 if(fish.isAlive()) {
                     fish.setDead();
@@ -153,7 +154,7 @@ private static final int FISH_FOOD_VALUE = 25;               // Good food value
             for (int b = 0; b < births && ! freeLocations.isEmpty(); b++) {
                 Location loc = freeLocations.remove(0);
                 Barracuda young = new Barracuda(false, loc);
-                nextFieldState.placeAnimal(young, loc);
+                nextFieldState.placeOrganism(young, loc);
             }
         }
     }

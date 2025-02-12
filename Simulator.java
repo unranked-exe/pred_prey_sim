@@ -36,9 +36,6 @@ public class Simulator
     // A graphical view of the simulation.
     private final SimulatorView view;
 
-    // Weather
-    private Weather weather;
-
     /**
      * Construct a simulation field with default size.
      */
@@ -63,7 +60,6 @@ public class Simulator
         
         field = new Field(depth, width);
         view = new SimulatorView(depth, width, this);
-        weather = new Weather();
 
         reset();
     }
@@ -99,28 +95,16 @@ public class Simulator
     {
         step++;
         timeOfDay = (timeOfDay + HOURS_PER_STEP) % DAY_END;
-
-        weather.update();
-
         Field nextFieldState = new Field(field.getDepth(), field.getWidth());
 
-        boolean reducedVision = weather.getCondition() == Weather.Condition.FOGGY;
-
-        List<Animal> animals = field.getAnimals();
-        for (Animal anAnimal : animals) {
-            if (reducedVision && (anAnimal instanceof Shark || anAnimal instanceof Barracuda)) {
-                continue;
-            }
+        List<Organism> animals = field.getOrganisms();
+        for (Organism anAnimal : animals) {
             anAnimal.act(field, nextFieldState);
         }
         
         field = nextFieldState;
         reportStats();
         view.showStatus(step, field);
-    }
-
-    public Weather getWeather() {
-        return weather;
     }
         
     /**
@@ -149,7 +133,7 @@ public class Simulator
      */
     private void populate()
     {
-        Animal.setSimulator(this);
+        Organism.setSimulator(this);
         Random rand = Randomizer.getRandom();
         field.clear();
         for(int row = 0; row < field.getDepth(); row++) {
@@ -158,23 +142,23 @@ public class Simulator
                 
                 if(rand.nextDouble() <= SHARK_CREATION_PROBABILITY) {
                     Shark shark = new Shark(true, location);
-                    field.placeAnimal(shark, location);
+                    field.placeOrganism(shark, location);
                 }
                 else if(rand.nextDouble() <= BARRACUDA_CREATION_PROBABILITY) {
                     Barracuda barracuda = new Barracuda(true, location);
-                    field.placeAnimal(barracuda, location);
+                    field.placeOrganism(barracuda, location);
                 }
                 else if(rand.nextDouble() <= TUNA_CREATION_PROBABILITY) {
                     Tuna tuna = new Tuna(true, location);
-                    field.placeAnimal(tuna, location);
+                    field.placeOrganism(tuna, location);
                 }
                 else if(rand.nextDouble() <= GOLDFISH_CREATION_PROBABILITY) {
                     Goldfish goldfish = new Goldfish(true, location);
-                    field.placeAnimal(goldfish, location);
+                    field.placeOrganism(goldfish, location);
                 }
                 else if(rand.nextDouble() <= PARROTFISH_CREATION_PROBABILITY) {
                     Parrotfish parrotfish = new Parrotfish(true, location);
-                    field.placeAnimal(parrotfish, location);
+                    field.placeOrganism(parrotfish, location);
                 }
                 // else leave the location empty.
             }

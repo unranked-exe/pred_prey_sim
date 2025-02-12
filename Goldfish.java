@@ -49,36 +49,37 @@ public class Goldfish extends Animal
      * @param currentField The field occupied.
      * @param nextFieldState The updated field.
      */
-    public void act(Field currentField, Field nextFieldState)
+    @Override
+     public void act(Field currentField, Field nextFieldState)
     {
         incrementAge();
         if(isAlive()) {
             int hour = getSimulator().getTimeOfDay();
             
-            // Always place the parrotfish in the next state
+            // Always place the goldfish in the next state
             Location currentLocation = getLocation();
-            nextFieldState.placeAnimal(this, currentLocation);
+            nextFieldState.placeOrganism(this, currentLocation);
     
-            List<Location> freeLocations = 
-                nextFieldState.getFreeAdjacentLocations(getLocation());
+            List<Location> freeLocations = nextFieldState.getFreeAdjacentLocations(currentLocation);
                 
 
+            // Checks if there is space around Goldfish to give birth
             if(!freeLocations.isEmpty()) {
                 giveBirth(nextFieldState, freeLocations);
-            }
-            
-            // Moving only during night time
-            if(hour <= 5 || hour >= 19) {
-            if(!freeLocations.isEmpty()) {
-                Location nextLocation = freeLocations.get(0);
-                setLocation(nextLocation);
-                nextFieldState.placeAnimal(this, nextLocation);
+                // Checks if there is still space to move
+                if(!freeLocations.isEmpty()) { 
+                    // Moving only during night time
+                    if(hour <= 5 || hour >= 19) {
+                        Location nextLocation = freeLocations.get(0);
+                        setLocation(nextLocation);
+                        nextFieldState.placeOrganism(this, getLocation());
+                    }
+                }
             }
             else {
                 // Overcrowding
                 setDead();
             }
-        }
         }
     }
 
@@ -117,7 +118,7 @@ public class Goldfish extends Animal
             for (int b = 0; b < births && !freeLocations.isEmpty(); b++) {
                 Location loc = freeLocations.remove(0);
                 Goldfish young = new Goldfish(false, loc);
-                nextFieldState.placeAnimal(young, loc);
+                nextFieldState.placeOrganism(young, loc);
             }
         }
     }

@@ -49,31 +49,29 @@ public class Parrotfish extends Animal
      * @param currentField The field occupied.
      * @param nextFieldState The updated field.
      */
-    public void act(Field currentField, Field nextFieldState)
+    @Override
+     public void act(Field currentField, Field nextFieldState)
     {
         incrementAge();
         if(isAlive()) {
             int hour = getSimulator().getTimeOfDay();
             
-            // Always place the parrotfish in the next state
             Location currentLocation = getLocation();
-            nextFieldState.placeAnimal(this, currentLocation);
     
-            List<Location> freeLocations = 
-                nextFieldState.getFreeAdjacentLocations(getLocation());
-                
-            // Breeding only during night time
-            if(hour <= 5 || hour >= 19) {
-                if(!freeLocations.isEmpty()) {
-                    giveBirth(nextFieldState, freeLocations);
-                }
-            }
-            
-            // Movement happens any time
+            List<Location> freeLocations = nextFieldState.getFreeAdjacentLocations(currentLocation);
+            // Check if there is space to move
             if(!freeLocations.isEmpty()) {
-                Location nextLocation = freeLocations.get(0);
+                Location nextLocation = freeLocations.remove(0);
+                // Check if there is also space for a child
+                if(!freeLocations.isEmpty()) {
+                    // Breeding only during night time
+                    if(hour <= 5 || hour >= 19) {
+                        giveBirth(nextFieldState, freeLocations);
+                    }
+                }
+                // Movement happens any time
                 setLocation(nextLocation);
-                nextFieldState.placeAnimal(this, nextLocation);
+                nextFieldState.placeOrganism(this, nextLocation);
             }
             else {
                 // Overcrowding
@@ -117,7 +115,7 @@ public class Parrotfish extends Animal
             for (int b = 0; b < births && !freeLocations.isEmpty(); b++) {
                 Location loc = freeLocations.remove(0);
                 Parrotfish young = new Parrotfish(false, loc);
-                nextFieldState.placeAnimal(young, loc);
+                nextFieldState.placeOrganism(young, loc);
             }
         }
     }

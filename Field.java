@@ -15,9 +15,9 @@ public class Field
     // The dimensions of the field.
     private final int depth, width;
     // Animals mapped by location.
-    private final Map<Location, Animal> field = new HashMap<>();
+    private final Map<Location, Organism> field = new HashMap<>();
     // The animals.
-    private final List<Animal> animals = new ArrayList<>();
+    private final List<Organism> organisms = new ArrayList<>();
 
     /**
      * Represent a field of the given dimensions.
@@ -31,21 +31,25 @@ public class Field
     }
 
     /**
-     * Place an animal at the given location.
-     * If there is already an animal at the location it will
+     * Place an organism at the given location.
+     * If there is already an organism at the location it will
      * be lost.
-     * @param anAnimal The animal to be placed.
-     * @param location Where to place the animal.
+     * Must be called even if organism does not move to allow persistance into next state.
+     * @param anOrganism The organism to be placed.
+     * @param location Where to place the organism.
      */
-    public void placeAnimal(Animal anAnimal, Location location)
+    public void placeOrganism(Organism anOrganism, Location location)
     {
         assert location != null;
-        Object other = field.get(location);
+        Organism other = field.get(location);
         if(other != null) {
-            animals.remove(other);
+            organisms.remove(other);
         }
-        field.put(location, anAnimal);
-        animals.add(anAnimal);
+        field.put(location, anOrganism);
+        organisms.add(anOrganism);
+        if (getAnimalAt(location).getClass() == Tuna.class){
+            //System.out.println("TUNANANANAAAAAAA why u not working!!!!!!");
+        }
     }
     
     /**
@@ -53,7 +57,7 @@ public class Field
      * @param location Where in the field.
      * @return The animal at the given location, or null if there is none.
      */
-    public Animal getAnimalAt(Location location)
+    public Organism getAnimalAt(Location location)
     {
         return field.get(location);
     }
@@ -68,7 +72,7 @@ public class Field
         List<Location> free = new LinkedList<>();
         List<Location> adjacent = getAdjacentLocations(location);
         for(Location next : adjacent) {
-            Animal anAnimal = field.get(next);
+            Organism anAnimal = field.get(next);
             if(anAnimal == null) {
                 free.add(next);
             }
@@ -121,30 +125,35 @@ public void fieldStats()
     int numSharks = 0, numBarracudas = 0, numGoldfish = 0;
     int numTuna = 0, numParrotfish = 0;
     
-    for(Animal anAnimal : field.values()) {
-        if(anAnimal instanceof Shark shark) {
-            if(shark.isAlive()) {
-                numSharks++;
+    for(Organism anOrganism : field.values()) {
+        switch (anOrganism) {
+            case Shark shark -> {
+                if(shark.isAlive()) {
+                    numSharks++;
+                }
             }
-        }
-        else if(anAnimal instanceof Barracuda barracuda) {
-            if(barracuda.isAlive()) {
-                numBarracudas++;
+            case Barracuda barracuda -> {
+                if(barracuda.isAlive()) {
+                    numBarracudas++;
+                }
             }
-        }
-        else if(anAnimal instanceof Tuna tuna) {
-            if(tuna.isAlive()) {
-                numTuna++;
+            case Tuna tuna -> {
+                if(tuna.isAlive()) {
+                    numTuna++;
+                }
             }
-        }
-        else if(anAnimal instanceof Goldfish goldfish) {
-            if(goldfish.isAlive()) {
-                numGoldfish++;
+            case Goldfish goldfish -> {
+                if(goldfish.isAlive()) {
+                    numGoldfish++;
+                }
             }
-        }
-        else if(anAnimal instanceof Parrotfish parrotfish) {
-            if(parrotfish.isAlive()) {
-                numParrotfish++;
+            case Parrotfish parrotfish -> {
+                if(parrotfish.isAlive()) {
+                    numParrotfish++;
+                }
+            }
+            default -> {
+                
             }
         }
     }
@@ -161,7 +170,7 @@ public void fieldStats()
      public void clear()
      {
          field.clear();
-         animals.clear();
+         organisms.clear();
      }
  
     /**
@@ -176,34 +185,41 @@ public boolean isViable()
     boolean tunaFound = false;
     boolean parrotfishFound = false;
     
-    Iterator<Animal> it = animals.iterator();
-    while(it.hasNext() && 
+    Iterator<Organism> it = organisms.iterator();
+    while(it.hasNext() &&
           !(goldfishFound && barracudaFound && sharkFound && 
             tunaFound && parrotfishFound)) {
-        Animal anAnimal = it.next();
-        if(anAnimal instanceof Goldfish goldfish) {
-            if(goldfish.isAlive()) {
-                goldfishFound = true;
-            }
-        }
-        else if(anAnimal instanceof Barracuda barracuda) {
-            if(barracuda.isAlive()) {
-                barracudaFound = true;
-            }
-        }
-        else if(anAnimal instanceof Shark shark) {
-            if(shark.isAlive()) {
-                sharkFound = true;
-            }
-        }
-        else if(anAnimal instanceof Tuna tuna) {
-            if(tuna.isAlive()) {
-                tunaFound = true;
-            }
-        }
-        else if(anAnimal instanceof Parrotfish parrotfish) {
-            if(parrotfish.isAlive()) {
-                parrotfishFound = true;
+        Organism check = it.next();
+        if (check instanceof Animal){
+            Animal anAnimal = (Animal) check;
+            switch (anAnimal) {
+                case Goldfish goldfish -> {
+                    if(goldfish.isAlive()) {
+                        goldfishFound = true;
+                    }
+                }
+                case Barracuda barracuda -> {
+                    if(barracuda.isAlive()) {
+                        barracudaFound = true;
+                    }
+                }
+                case Shark shark -> {
+                    if(shark.isAlive()) {
+                        sharkFound = true;
+                    }
+                }
+                case Tuna tuna -> {
+                    if(tuna.isAlive()) {
+                        tunaFound = true;
+                    }
+                }
+                case Parrotfish parrotfish -> {
+                    if(parrotfish.isAlive()) {
+                        parrotfishFound = true;
+                    }
+                }
+                default -> {
+                }
             }
         }
     }
@@ -214,9 +230,9 @@ public boolean isViable()
     /**
      * Get the list of animals.
      */
-    public List<Animal> getAnimals()
+    public List<Organism> getOrganisms()
     {
-        return animals;
+        return organisms;
     }
 
     /**
