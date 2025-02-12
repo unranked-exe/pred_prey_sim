@@ -143,7 +143,7 @@ public class SimulatorView extends JFrame
 
         population.setText(POPULATION_PREFIX + stats.getPopulationDetails(field));
         timeLabel.setText(TIME_PREFIX + formatTime(simulator.getTimeOfDay()));
-        // weatherLabel.setText(WEATHER_PREFIX + simulator.getWeather().getCondition());
+        weatherLabel.setText(WEATHER_PREFIX + simulator.getWeather().getCondition());
         fieldView.repaint();
 
     }

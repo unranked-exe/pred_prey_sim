@@ -124,6 +124,11 @@ private static final int FISH_FOOD_VALUE = 25;               // Good food value
      */
     private Location findFood(Field field)
     {
+        // Skip hunting if foggy
+        if(getSimulator().getWeather().getCondition() == Weather.Condition.FOGGY) {
+            return null;
+        }
+    
         List<Location> adjacent = field.getAdjacentLocations(getLocation());
         Iterator<Location> it = adjacent.iterator();
         Location foodLocation = null;
@@ -140,7 +145,6 @@ private static final int FISH_FOOD_VALUE = 25;               // Good food value
         }
         return foodLocation;
     }
-    
     /**
      * Check whether this barracuda is to give birth at this step.
      * New births will be made into free adjacent locations.

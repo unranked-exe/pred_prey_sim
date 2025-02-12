@@ -35,6 +35,8 @@ public class Simulator
     private int timeOfDay;
     // A graphical view of the simulation.
     private final SimulatorView view;
+    // Weather
+    private Weather weather;
 
     /**
      * Construct a simulation field with default size.
@@ -60,6 +62,7 @@ public class Simulator
         
         field = new Field(depth, width);
         view = new SimulatorView(depth, width, this);
+        weather = new Weather();
 
         reset();
     }
@@ -95,10 +98,11 @@ public class Simulator
     {
         step++;
         timeOfDay = (timeOfDay + HOURS_PER_STEP) % DAY_END;
-        Field nextFieldState = new Field(field.getDepth(), field.getWidth());
-
+        weather.update();
+        Field nextFieldState = new Field(field.getDepth(), field.getWidth());    
         List<Organism> animals = field.getOrganisms();
         for (Organism anAnimal : animals) {
+            
             anAnimal.act(field, nextFieldState);
         }
         
@@ -126,6 +130,10 @@ public class Simulator
      */
     public int getTimeOfDay() {
         return timeOfDay;
+    }
+
+    public Weather getWeather() {
+        return weather;
     }
 
     /**
