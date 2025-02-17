@@ -47,9 +47,6 @@ public class Field
         }
         field.put(location, anOrganism);
         organisms.add(anOrganism);
-        if (getAnimalAt(location).getClass() == Tuna.class){
-            //System.out.println("TUNANANANAAAAAAA why u not working!!!!!!");
-        }
     }
     
     /**
@@ -57,7 +54,7 @@ public class Field
      * @param location Where in the field.
      * @return The animal at the given location, or null if there is none.
      */
-    public Organism getAnimalAt(Location location)
+    public Organism getOrganismAt(Location location)
     {
         return field.get(location);
     }
@@ -124,6 +121,8 @@ public void fieldStats()
 {
     int numSharks = 0, numBarracudas = 0, numGoldfish = 0;
     int numTuna = 0, numParrotfish = 0;
+
+    int numAlgae = 0, numSeaweed = 0;
     
     for(Organism anOrganism : field.values()) {
         switch (anOrganism) {
@@ -152,6 +151,16 @@ public void fieldStats()
                     numParrotfish++;
                 }
             }
+            case Algae algae -> {
+                if(algae.isAlive()) {
+                    numAlgae++;
+                }
+            }
+            case Seaweed seaweed -> {
+                if(seaweed.isAlive()) {
+                    numSeaweed++;
+                }
+            }
             default -> {
                 
             }
@@ -161,7 +170,9 @@ public void fieldStats()
                      " Barracudas: " + numBarracudas +
                      " Sharks: " + numSharks +
                      " Tuna: " + numTuna +
-                     " Parrotfish: " + numParrotfish);
+                     " Parrotfish: " + numParrotfish +
+                     " Algae: " + numAlgae +
+                     " Seaweed: " + numSeaweed);
 }
  
      /**
@@ -190,8 +201,7 @@ public boolean isViable()
           !(goldfishFound && barracudaFound && sharkFound && 
             tunaFound && parrotfishFound)) {
         Organism check = it.next();
-        if (check instanceof Animal){
-            Animal anAnimal = (Animal) check;
+        if (check instanceof Animal anAnimal){
             switch (anAnimal) {
                 case Goldfish goldfish -> {
                     if(goldfish.isAlive()) {
@@ -251,5 +261,27 @@ public boolean isViable()
     public int getWidth()
     {
         return width;
+    }
+
+    /**
+     * Get a shuffled list of the free locations.
+     * @return A list of free locations.
+     */
+    public List <Location> getFreeLocations()
+    {
+        List<Location> free = new LinkedList<>();
+        for (Location loc : field.keySet()) {
+            Organism anOrganism = field.get(loc);
+            if (anOrganism == null) {
+                free.add(loc);
+            }
+            else if (!anOrganism.isAlive()) {
+                free.add(loc);
+            }
+        }
+        // Shuffle the list. Several other methods rely on the list
+        // being in a random order.
+        Collections.shuffle(free, rand);
+        return free;
     }
 }

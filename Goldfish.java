@@ -1,5 +1,5 @@
+import java.util.Iterator;
 import java.util.List;
-import java.util.Random;
 
 /**
  * A simple model of a goldfish.
@@ -19,14 +19,7 @@ public class Goldfish extends Animal
     private static final double BREEDING_PROBABILITY = 0.01;
     // The maximum number of births.
     private static final int MAX_LITTER_SIZE = 4;
-    // A shared random number generator to control breeding.
-    private static final Random rand = Randomizer.getRandom();
     
-    // Individual characteristics (instance fields).
-    
-    // The goldfish's age.
-    private int age;
-
     /**
      * Create a new goldfish. A goldfish may be created with age
      * zero (a new born) or with a random age.
@@ -36,10 +29,9 @@ public class Goldfish extends Animal
      */
     public Goldfish(boolean randomAge, Location location)
     {
-        super(location);
-        age = 0;
+        super(randomAge, location);
         if(randomAge) {
-            age = rand.nextInt(MAX_AGE);
+            setAge(rand.nextInt(MAX_AGE));
         }
     }
     
@@ -52,7 +44,7 @@ public class Goldfish extends Animal
     @Override
      public void act(Field currentField, Field nextFieldState)
     {
-        incrementAge();
+        incrementAge(MAX_AGE);
         if(isAlive()) {
             int hour = getSimulator().getTimeOfDay();
             
@@ -61,24 +53,30 @@ public class Goldfish extends Animal
             nextFieldState.placeOrganism(this, currentLocation);
     
             List<Location> freeLocations = nextFieldState.getFreeAdjacentLocations(currentLocation);
-                
-
-            // Checks if there is space around Goldfish to give birth
-            if(!freeLocations.isEmpty()) {
-                giveBirth(nextFieldState, freeLocations);
-                // Checks if there is still space to move
-                if(!freeLocations.isEmpty()) { 
-                    // Moving only during night time
-                    if(hour <= 5 || hour >= 19) {
-                        Location nextLocation = freeLocations.get(0);
-                        setLocation(nextLocation);
-                        nextFieldState.placeOrganism(this, getLocation());
-                    }
-                }
+             
+            // Check if there is food to eat
+            Location foodLoc = findFood(currentField);
+            if(foodLoc != null) {
+                nextFieldState.placeOrganism(this, foodLoc);
             }
             else {
-                // Overcrowding
-                setDead();
+                // Checks if there is space around Goldfish to give birth
+                if(!freeLocations.isEmpty()) {
+                    giveBirth(nextFieldState, freeLocations);
+                    // Checks if there is still space to move
+                    if(!freeLocations.isEmpty()) { 
+                        // Moving only during night time
+                        if(hour <= 5 || hour >= 19) {
+                            Location nextLocation = freeLocations.get(0);
+                            setLocation(nextLocation);
+                            nextFieldState.placeOrganism(this, getLocation());
+                        }
+                    }
+                }
+                else {
+                    // Overcrowding
+                    setDead();
+                }
             }
         }
     }
@@ -86,34 +84,23 @@ public class Goldfish extends Animal
     @Override
     public String toString() {
         return "goldfish{" +
-                "age=" + age +
+                "age=" + getAge() +
                 ", alive=" + isAlive() +
                 ", location=" + getLocation() +
                 '}';
-    }
-
-    /**
-     * Increase the age.
-     * This could result in the goldfish's death.
-     */
-    private void incrementAge()
-    {
-        age++;
-        if(age > MAX_AGE) {
-            setDead();
-        }
     }
     
     /**
      * Check whether or not this goldfish is to give birth at this step.
      * New births will be made into free adjacent locations.
      * @param freeLocations The locations that are free in the current field.
+     * @return true if the goldfish gave birth, false otherwise.
      */
-    private void giveBirth(Field nextFieldState, List<Location> freeLocations)
+    private boolean giveBirth(Field nextFieldState, List<Location> freeLocations)
     {
         // New goldfishs are born into adjacent locations.
         // Get a list of adjacent free locations.
-        int births = breed();
+        int births = breed(BREEDING_AGE, BREEDING_PROBABILITY, MAX_LITTER_SIZE);
         if(births > 0) {
             for (int b = 0; b < births && !freeLocations.isEmpty(); b++) {
                 Location loc = freeLocations.remove(0);
@@ -121,31 +108,40 @@ public class Goldfish extends Animal
                 nextFieldState.placeOrganism(young, loc);
             }
         }
-    }
-        
-    /**
-     * Generate a number representing the number of births,
-     * if it can breed.
-     * @return The number of births (may be zero).
-     */
-    private int breed()
-    {
-        int births;
-        if(canBreed() && rand.nextDouble() <= BREEDING_PROBABILITY) {
-            births = rand.nextInt(MAX_LITTER_SIZE) + 1;
-        }
-        else {
-            births = 0;
-        }
-        return births;
+        return births > 0;
     }
 
+
     /**
-     * A goldfish can breed if it has reached the breeding age.
-     * @return true if the goldfish can breed, false otherwise.
+     * Finds location of nearest food (Plants) and eats it
+     * @param field The current state of the field
+     * @return location of food
      */
-    private boolean canBreed()
+    private Location findFood(Field field)
     {
-        return age >= BREEDING_AGE;
+        List<Location> adjacent = field.getAdjacentLocations(getLocation());
+        Iterator<Location> it = adjacent.iterator();
+        Location foodLocation = null;
+        while(foodLocation == null && it.hasNext()) {
+            Location loc = it.next();
+            Organism organism = field.getOrganismAt(loc);
+            if(organism instanceof Plant plant) {
+                if(plant.isAlive()) {
+                    switch (plant) {
+                        case Seaweed seaweed -> {
+                            setFoodValue(Seaweed.FOOD_VALUE);
+                        }
+                        case Algae algae -> {
+                            setFoodValue(Algae.FOOD_VALUE);
+                        } 
+                        default -> {
+                        }
+                    }
+                    plant.setDead();
+                    foodLocation = loc;
+                }
+            }
+        }
+        return foodLocation;
     }
 }

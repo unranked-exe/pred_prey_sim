@@ -54,8 +54,12 @@ public class SimulatorView extends JFrame
         setColor(Goldfish.class, Color.orange);
         setColor(Shark.class, Color.blue);
         setColor(Barracuda.class, Color.red);
-        setColor(Tuna.class, Color.green);
-        setColor(Parrotfish.class, Color.pink);   
+        setColor(Tuna.class, Color.magenta);
+        setColor(Parrotfish.class, Color.pink);
+        
+        setColor(Algae.class, Color.green);
+        setColor(Seaweed.class, Color.red);
+
 
         setTitle("Ocean Simulation");
         stepLabel = new JLabel(STEP_PREFIX, JLabel.CENTER);
@@ -91,17 +95,17 @@ public class SimulatorView extends JFrame
      * @param animalClass The animal's Class object.
      * @param color The color to be used for the given class.
      */
-    public void setColor(Class<?> animalClass, Color color)
+    public void setColor(Class<?> organismClass, Color color)
     {
-        colors.put(animalClass, color);
+        colors.put(organismClass, color);
     }
 
     /**
      * @return The color to be used for a given class of animal.
      */
-    private Color getColor(Class<?> animalClass)
+    private Color getColor(Class<?> organismClass)
     {
-        Color col = colors.get(animalClass);
+        Color col = colors.get(organismClass);
         if(col == null) {
             // no color defined for this class
             return UNKNOWN_COLOR;
@@ -129,7 +133,7 @@ public class SimulatorView extends JFrame
 
         for(int row = 0; row < field.getDepth(); row++) {
             for(int col = 0; col < field.getWidth(); col++) {
-                Object animal = field.getAnimalAt(new Location(row, col));
+                Object animal = field.getOrganismAt(new Location(row, col));
                 if(animal != null) {
                     stats.incrementCount(animal.getClass());
                     fieldView.drawMark(col, row, getColor(animal.getClass()));

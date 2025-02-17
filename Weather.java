@@ -1,3 +1,10 @@
+/**
+ * Weather class that represents the weather in the simulation.
+ * The weather can be sunny, rainy, cloudy or foggy.
+ * The weather can change randomly.
+ * 
+ * @author Aman H
+ */
 import java.util.Random;
 
 public class Weather {

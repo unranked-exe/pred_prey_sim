@@ -1,6 +1,5 @@
 import java.util.Iterator;
 import java.util.List;
-import java.util.Random;
 
 /**
  * A simple model of a barracuda.
@@ -19,14 +18,9 @@ private static final double BREEDING_PROBABILITY = 0.8;      // Medium breed rat
 private static final int MAX_LITTER_SIZE = 2;                // Small litters
 private static final int FISH_FOOD_VALUE = 25;               // Good food value
     
-    // A shared random number generator to control breeding.
-    private static final Random rand = Randomizer.getRandom();
-    
     // Individual characteristics (instance fields).
     // The barracuda's age.
     private int age;
-    // The barracuda's food level, which is increased by eating fish.
-    private int foodLevel;
 
     /**
      * Create a barracuda. A barracuda can be created as a new born (age zero
@@ -37,14 +31,14 @@ private static final int FISH_FOOD_VALUE = 25;               // Good food value
      */
     public Barracuda(boolean randomAge, Location location)
     {
-        super(location);
+        super(randomAge, location);
         if(randomAge) {
             age = rand.nextInt(MAX_AGE);
         }
         else {
             age = 0;
         }
-        foodLevel = rand.nextInt(FISH_FOOD_VALUE);
+        setFoodValue(rand.nextInt(FISH_FOOD_VALUE));
     }
     
     /**
@@ -89,7 +83,7 @@ private static final int FISH_FOOD_VALUE = 25;               // Good food value
                 "age=" + age +
                 ", alive=" + isAlive() +
                 ", location=" + getLocation() +
-                ", foodLevel=" + foodLevel +
+                ", foodLevel=" + getFoodValue() +
                 ", gender=" + getGender() +
                 '}';
     }
@@ -101,17 +95,6 @@ private static final int FISH_FOOD_VALUE = 25;               // Good food value
     {
         age++;
         if(age > MAX_AGE) {
-            setDead();
-        }
-    }
-    
-    /**
-     * Make this barracuda more hungry. This could result in the barracuda's death.
-     */
-    private void incrementHunger()
-    {
-        foodLevel--;
-        if(foodLevel <= 0) {
             setDead();
         }
     }
@@ -134,11 +117,11 @@ private static final int FISH_FOOD_VALUE = 25;               // Good food value
         Location foodLocation = null;
         while(foodLocation == null && it.hasNext()) {
             Location loc = it.next();
-            Organism animal = field.getAnimalAt(loc);
+            Organism animal = field.getOrganismAt(loc);
             if(animal instanceof Tuna fish) {
                 if(fish.isAlive()) {
                     fish.setDead();
-                    foodLevel = FISH_FOOD_VALUE;
+                    setFoodValue(FISH_FOOD_VALUE);
                     foodLocation = loc;
                 }
             }
@@ -168,10 +151,10 @@ private static final int FISH_FOOD_VALUE = 25;               // Good food value
      * if it can breed.
      * @return The number of births (may be zero).
      */
-    private int breed(Field field)
+     private int breed(Field field)
     {
         int births = 0;
-        if(canBreed()) {
+        if(canBreed(BREEDING_AGE)) {
             // Look for mate of opposite gender
             Barracuda mate = findMatingPartner(field);
             if(mate != null && rand.nextDouble() <= BREEDING_PROBABILITY) {
@@ -190,22 +173,13 @@ private static final int FISH_FOOD_VALUE = 25;               // Good food value
     {
         List<Location> adjacent = field.getAdjacentLocations(getLocation());
         for(Location where : adjacent) {
-            Object animal = field.getAnimalAt(where);
-            if(animal instanceof Barracuda) {
-                Barracuda other = (Barracuda) animal;
-                if (other.canBreed() && other.getGender() != this.getGender()) {
+            Object animal = field.getOrganismAt(where);
+            if(animal instanceof Barracuda other) {
+                if (other.canBreed(BREEDING_AGE) && other.getGender() != this.getGender()) {
                     return other;
                 }
             }
         }
         return null;
-    }
-
-    /**
-     * A barracuda can breed if it has reached the breeding age.
-     */
-    private boolean canBreed()
-    {
-        return age >= BREEDING_AGE;
     }
 }

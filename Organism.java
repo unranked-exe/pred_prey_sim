@@ -1,3 +1,4 @@
+import java.util.Random;
 
 /**
  * Write a description of class Organism here.
@@ -13,6 +14,8 @@ public abstract class Organism
     private Location location;
     // Allows for each organsism to access a single instance of the simulator
     protected static Simulator simulator;
+    // A shared random number generator to control breeding.
+    protected static final Random rand = Randomizer.getRandom();
 
     /**
      * Constructor for objects of class Animal.
@@ -25,7 +28,7 @@ public abstract class Organism
     }
 
     /**
-     * Set the simulator instance to be used by all animals.
+     * Set the simulator instance to be used by all organisms.
      * @param sim Simultor instance to be set.
      */
 
@@ -83,5 +86,10 @@ public abstract class Organism
     protected void setLocation(Location location)
     {
         this.location = location;
+    }
+
+    public static void growPlants(Field nextFieldState)
+    {
+        Plant.checkGrow(nextFieldState);
     }
 }

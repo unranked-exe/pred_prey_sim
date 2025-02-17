@@ -1,5 +1,6 @@
+
+import java.util.Iterator;
 import java.util.List;
-import java.util.Random;
 
 /**
  * A simple model of a parrotfish.
@@ -19,13 +20,6 @@ public class Parrotfish extends Animal
     private static final double BREEDING_PROBABILITY = 0.05;
     // The maximum number of births.
     private static final int MAX_LITTER_SIZE = 4;
-    // A shared random number generator to control breeding.
-    private static final Random rand = Randomizer.getRandom();
-    
-    // Individual characteristics (instance fields).
-    
-    // The parrotfish's age.
-    private int age;
 
     /**
      * Create a new parrotfish. A parrotfish may be created with age
@@ -36,10 +30,9 @@ public class Parrotfish extends Animal
      */
     public Parrotfish(boolean randomAge, Location location)
     {
-        super(location);
-        age = 0;
+        super(randomAge, location);
         if(randomAge) {
-            age = rand.nextInt(MAX_AGE);
+            setAge(rand.nextInt(MAX_AGE));
         }
     }
     
@@ -52,65 +45,67 @@ public class Parrotfish extends Animal
     @Override
      public void act(Field currentField, Field nextFieldState)
     {
-        incrementAge();
+        incrementAge(MAX_AGE);
         if(isAlive()) {
             int hour = getSimulator().getTimeOfDay();
             
             Location currentLocation = getLocation();
     
             List<Location> freeLocations = nextFieldState.getFreeAdjacentLocations(currentLocation);
-            // Check if there is space to move
-            if(!freeLocations.isEmpty()) {
-                Location nextLocation = freeLocations.remove(0);
-                // Check if there is also space for a child
-                if(!freeLocations.isEmpty()) {
-                    // Breeding only during night time
-                    if(hour <= 5 || hour >= 19) {
-                        giveBirth(nextFieldState, freeLocations);
-                    }
-                }
-                // Movement happens any time
-                setLocation(nextLocation);
-                nextFieldState.placeOrganism(this, nextLocation);
+            // Check if there is food to eat
+            Location foodLoc = findFood(currentField);
+            if(foodLoc != null) {
+                nextFieldState.placeOrganism(this, foodLoc);
             }
             else {
-                // Overcrowding
-                setDead();
+                if (!freeLocations.isEmpty()) {
+                    // Breeding only during night time
+                    if(hour <= 5 || hour >= 19) {
+                        if (giveBirth(nextFieldState, freeLocations)){}
+                        else {
+                            // Move to a free location if not breeding time
+                            Location nextLocation = freeLocations.remove(0);
+                            setLocation(nextLocation);
+                            nextFieldState.placeOrganism(this, nextLocation);
+                        }
+                    }
+                    else{
+                        //Moves if it can't breed
+                        Location nextLocation = freeLocations.remove(0);    
+                        setLocation(nextLocation);
+                        nextFieldState.placeOrganism(this, nextLocation);
+                    }
+                }
+                else {
+                    // Overcrowding
+                    setDead();
+                }
             }
         }
     }
+        
+    
 
     @Override
     public String toString() {
         return "parrotfish{" +
-                "age=" + age +
+                "age=" + getAge() +
                 ", alive=" + isAlive() +
                 ", location=" + getLocation() +
                 '}';
-    }
-
-    /**
-     * Increase the age.
-     * This could result in the parrotfish's death.
-     */
-    private void incrementAge()
-    {
-        age++;
-        if(age > MAX_AGE) {
-            setDead();
-        }
     }
     
     /**
      * Check whether or not this parrotfish is to give birth at this step.
      * New births will be made into free adjacent locations.
      * @param freeLocations The locations that are free in the current field.
+     * @return true if the parrotfish gave birth, false otherwise.
      */
-    private void giveBirth(Field nextFieldState, List<Location> freeLocations)
+    private boolean giveBirth(Field nextFieldState, List<Location> freeLocations)
     {
         // New parrotfishs are born into adjacent locations.
         // Get a list of adjacent free locations.
-        int births = breed();
+        int births = breed(BREEDING_AGE, BREEDING_PROBABILITY, MAX_LITTER_SIZE);
         if(births > 0) {
             for (int b = 0; b < births && !freeLocations.isEmpty(); b++) {
                 Location loc = freeLocations.remove(0);
@@ -118,31 +113,39 @@ public class Parrotfish extends Animal
                 nextFieldState.placeOrganism(young, loc);
             }
         }
-    }
-        
-    /**
-     * Generate a number representing the number of births,
-     * if it can breed.
-     * @return The number of births (may be zero).
-     */
-    private int breed()
-    {
-        int births;
-        if(canBreed() && rand.nextDouble() <= BREEDING_PROBABILITY) {
-            births = rand.nextInt(MAX_LITTER_SIZE) + 1;
-        }
-        else {
-            births = 0;
-        }
-        return births;
+        return births > 0;
     }
 
     /**
-     * A parrotfish can breed if it has reached the breeding age.
-     * @return true if the parrotfish can breed, false otherwise.
+     * Finds location of nearest food (Plants) and eats it
+     * @param field The current state of the field
+     * @return location of food
      */
-    private boolean canBreed()
+    private Location findFood(Field field)
     {
-        return age >= BREEDING_AGE;
+        List<Location> adjacent = field.getAdjacentLocations(getLocation());
+        Iterator<Location> it = adjacent.iterator();
+        Location foodLocation = null;
+        while(foodLocation == null && it.hasNext()) {
+            Location loc = it.next();
+            Organism organism = field.getOrganismAt(loc);
+            if(organism instanceof Plant plant) {
+                if(plant.isAlive()) {
+                    switch (plant) {
+                        case Seaweed seaweed -> {
+                            setFoodValue(Seaweed.FOOD_VALUE);
+                        }
+                        case Algae algae -> {
+                            setFoodValue(Algae.FOOD_VALUE);
+                        } 
+                        default -> {
+                        }
+                    }
+                    plant.setDead();
+                    foodLocation = loc;
+                }
+            }
+        }
+        return foodLocation;
     }
 }

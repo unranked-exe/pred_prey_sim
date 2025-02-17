@@ -1,5 +1,4 @@
 import java.util.List;
-import java.util.Random;
 
 /**
  * A simple model of a tuna.
@@ -16,8 +15,6 @@ public class Tuna extends Animal
     private static final int MAX_AGE = 80;                       // Shorter life
     private static final double BREEDING_PROBABILITY = 0.4;       // Higher breed rate
     private static final int MAX_LITTER_SIZE = 3;                // Larger litters
-    // A shared random number generator to control breeding.
-    private static final Random rand = Randomizer.getRandom();
     
     // Individual characteristics (instance fields).
     
@@ -33,7 +30,7 @@ public class Tuna extends Animal
      */
     public Tuna(boolean randomAge, Location location)
     {
-        super(location);
+        super(randomAge, location);
         age = 0;
         if(randomAge) {
             age = rand.nextInt(MAX_AGE);
@@ -123,7 +120,7 @@ public class Tuna extends Animal
     private int breed(Field field)
     {
         int births = 0;
-        if(canBreed()) {
+        if(canBreed(BREEDING_AGE)) {
             // Look for mate of opposite gender
             Tuna mate = findMatingPartner(field);
             if(mate != null && rand.nextDouble() <= BREEDING_PROBABILITY) {
@@ -142,23 +139,13 @@ public class Tuna extends Animal
     {
         List<Location> adjacent = field.getAdjacentLocations(getLocation());
         for(Location where : adjacent) {
-            Object animal = field.getAnimalAt(where);
-            if(animal instanceof Tuna) {
-                Tuna other = (Tuna) animal;
-                if (other.canBreed() && other.getGender() != this.getGender()) {
+            Object animal = field.getOrganismAt(where);
+            if(animal instanceof Tuna other) {
+                if (other.canBreed(BREEDING_AGE) && other.getGender() != this.getGender()) {
                     return other;
                 }
             }
         }
         return null;
-    }
-
-    /**
-     * A tuna can breed if it has reached the breeding age.
-     * @return true if the tuna can breed, false otherwise.
-     */
-    private boolean canBreed()
-    {
-        return age >= BREEDING_AGE;
     }
 }

@@ -18,9 +18,13 @@ public class Simulator
     // Population probabilities
     private static final double SHARK_CREATION_PROBABILITY = 0.025;      // Fewer apex predators
     private static final double BARRACUDA_CREATION_PROBABILITY = 0.025;  // Medium predators
-    private static final double TUNA_CREATION_PROBABILITY = 0.15;       // More prey
-    private static final double GOLDFISH_CREATION_PROBABILITY = 0.01;   // Increased prey population
-    private static final double PARROTFISH_CREATION_PROBABILITY = 0.01; // Increased prey population
+    private static final double TUNA_CREATION_PROBABILITY = 0.025;       // More prey
+    private static final double GOLDFISH_CREATION_PROBABILITY = 0.015;   // Increased prey population
+    private static final double PARROTFISH_CREATION_PROBABILITY = 0.02; // Increased prey population
+    
+    private static final double ALGAE_CREATION_PROBABILITY = 0.025;
+    private static final double SEAWEED_CREATION_PROBABILITY = 0.025;
+    // Increased food source
 
     // Time of day constants
     private static final int DAY_START = 12;
@@ -105,7 +109,7 @@ public class Simulator
             
             anAnimal.act(field, nextFieldState);
         }
-        
+        Organism.growPlants(nextFieldState);
         field = nextFieldState;
         reportStats();
         view.showStatus(step, field);
@@ -114,10 +118,11 @@ public class Simulator
     /**
      * Reset the simulation to a starting position.
      */
-    public void reset()
+    public final void reset()
     {
         step = 0;
         timeOfDay = DAY_START;
+        
         populate();
         view.showStatus(step, field);
     }
@@ -167,6 +172,14 @@ public class Simulator
                 else if(rand.nextDouble() <= PARROTFISH_CREATION_PROBABILITY) {
                     Parrotfish parrotfish = new Parrotfish(true, location);
                     field.placeOrganism(parrotfish, location);
+                }
+                else if(rand.nextDouble() <= ALGAE_CREATION_PROBABILITY) {
+                    Algae algae = new Algae(location);
+                    field.placeOrganism(algae, location);
+                }
+                else if(rand.nextDouble() <= SEAWEED_CREATION_PROBABILITY) {
+                    Seaweed seaweed = new Seaweed(location);
+                    field.placeOrganism(seaweed, location);
                 }
                 // else leave the location empty.
             }
