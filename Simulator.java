@@ -106,6 +106,10 @@ public class Simulator
         Field nextFieldState = new Field(field.getDepth(), field.getWidth());    
         List<Organism> animals = field.getOrganisms();
         for (Organism anAnimal : animals) {
+            if (anAnimal instanceof Animal animal) {
+                animal.handleInfection();
+                animal.handleSpread(field);
+            }
             
             anAnimal.act(field, nextFieldState);
         }

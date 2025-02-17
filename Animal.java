@@ -1,3 +1,4 @@
+import java.util.List;
 
 /**
  * Common elements of all organisms in the simulation.
@@ -18,6 +19,9 @@ public abstract class Animal extends Organism
     private int age;
     // Food level, which is increased by eating plants/fish
     private int foodLevel = 0;
+    private boolean infected = false;
+    private static final double INFECTION_PROBABILITY = 0.001;
+    private static final double SPREAD_PROBABILITY = 0.5;
 
     /**
      * Constructor for objects of class Animal.
@@ -121,5 +125,36 @@ public abstract class Animal extends Organism
             births = 0;
         }
         return births;
+    }
+
+    public boolean isInfected()
+    {
+        return infected;
+    }
+    
+    protected void setInfected(boolean infected)
+    {
+        this.infected = infected;
+    }
+
+    protected void handleInfection()
+    {
+        if(!infected && rand.nextDouble() <= INFECTION_PROBABILITY) {
+            infected = true;
+        }
+    }
+
+        protected void handleSpread(Field field) {
+        if (infected) {
+            List<Location> adjacent = field.getAdjacentLocations(getLocation());
+            for (Location loc : adjacent) {
+                Organism organism = field.getOrganismAt(loc);
+                if (organism instanceof Animal other && !other.isInfected()) {
+                    if (rand.nextDouble() <= SPREAD_PROBABILITY) {
+                        other.setInfected(true);
+                    }
+                }
+            }
+        }
     }
 }

@@ -115,6 +115,14 @@ public class SimulatorView extends JFrame
         }
     }
 
+    private Color getInfected(Color color) {
+        return new Color(
+            Math.max((int)(color.getRed() * 0.7), 0),
+            Math.max((int)(color.getGreen() * 0.7), 0),
+            Math.max((int)(color.getBlue() * 0.7), 0)
+        );
+    }
+
     /**
      * Show the current status of the field.
      * @param step Which iteration step it is.
@@ -136,7 +144,13 @@ public class SimulatorView extends JFrame
                 Object animal = field.getOrganismAt(new Location(row, col));
                 if(animal != null) {
                     stats.incrementCount(animal.getClass());
-                    fieldView.drawMark(col, row, getColor(animal.getClass()));
+
+                    Color state = getColor(animal.getClass());
+
+                    if (animal instanceof Animal a && a.isInfected()) {
+                        state = getInfected(state);
+                    }
+                    fieldView.drawMark(col, row, state);
                 }
                 else {
                     fieldView.drawMark(col, row, EMPTY_COLOR);
