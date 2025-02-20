@@ -3,20 +3,20 @@ import java.util.List;
 
 /**
  * A simple model of a barracuda.
- * Barracudas age, move, eat fish, and die.
+ * Barracudas age, move, eat fish, or die due to overcrowding or starvation.
  * 
- * @author David J. Barnes and Michael Kölling
+ * @author David J. Barnes, Michael Kölling, Aman H, Chris M
  * @version 7.1
  */
 public class Barracuda extends Animal
 {
     // Characteristics shared by all barracudas (class variables).
 // Barracuda parameters  
-private static final int BREEDING_AGE = 8;                    // Medium breeding age
-private static final int MAX_AGE = 150;                       // Medium lifespan
-private static final double BREEDING_PROBABILITY = 0.8;      // Medium breed rate
-private static final int MAX_LITTER_SIZE = 2;                // Small litters
-private static final int FISH_FOOD_VALUE = 25;               // Good food value
+private static final int BREEDING_AGE = 8;
+private static final int MAX_AGE = 150;
+private static final double BREEDING_PROBABILITY = 0.8;
+private static final int MAX_LITTER_SIZE = 2;
+private static final int FISH_FOOD_VALUE = 25;
     
     // Individual characteristics (instance fields).
     // The barracuda's age.

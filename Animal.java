@@ -1,9 +1,11 @@
 import java.util.List;
 
 /**
- * Common elements of all organisms in the simulation.
+ * Abstract class representing animals in the Sealife simulation.
+ * This class extends Organism and provides core functionality for all animal species,
+ * including predators and prey. Animals have gender, age, food levels, and can be affected by diseases.
  *
- * @author David J. Barnes and Michael Kölling
+ * @author David J. Barnes, Michael Kölling, Aman H, Chris M
  * @version 7.0
  */
 public abstract class Animal extends Organism
@@ -89,6 +91,9 @@ public abstract class Animal extends Organism
         this.foodLevel = foodValue;
     }
 
+    /**
+     * Decrement the food level of the animal therefore making them hungry.
+     */
     protected void incrementHunger()
     {
         this.foodLevel--;
@@ -127,16 +132,27 @@ public abstract class Animal extends Organism
         return births;
     }
 
+    /**
+     * Check if the animal is infected.
+     * @return true if the animal is infected, false otherwise.
+     */
     public boolean isInfected()
     {
         return infected;
     }
     
+    /**
+     * Set the infection status of the animal.
+     * @param infected The infection status of the animal.
+     */
     protected void setInfected(boolean infected)
     {
         this.infected = infected;
     }
 
+    /**
+     * Handle the infection from animal to animal by checking if already infected or there is a chance.
+     */
     protected void handleInfection()
     {
         if(!infected && rand.nextDouble() <= INFECTION_PROBABILITY) {

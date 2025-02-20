@@ -2,9 +2,9 @@ import java.util.*;
 
 /**
  * A simple predator-prey simulator, based on a rectangular field containing 
- * fish, barracudas, and sharks.
+ * fish, barracudas, sharks and plants
  * 
- * @author David J.
+ * @author David J., Aman H, Chris M
  * @version 7.1
  */
 public class Simulator
@@ -22,9 +22,9 @@ public class Simulator
     private static final double GOLDFISH_CREATION_PROBABILITY = 0.015;   // Increased prey population
     private static final double PARROTFISH_CREATION_PROBABILITY = 0.02; // Increased prey population
     
+    // Food Source Probabilities
     private static final double ALGAE_CREATION_PROBABILITY = 0.025;
     private static final double SEAWEED_CREATION_PROBABILITY = 0.025;
-    // Increased food source
 
     // Time of day constants
     private static final int DAY_START = 12;
@@ -73,7 +73,7 @@ public class Simulator
     
     /**
      * Run the simulation from its current state for a reasonably long 
-     * period (4000 steps).
+     * period (700 steps).
      */
     public void runLongSimulation()
     {
@@ -96,7 +96,9 @@ public class Simulator
     
     /**
      * Run the simulation from its current state for a single step.
-     * Iterate over the whole field updating the state of each animal.
+     * Iterate over the whole field updating the state of each organism.
+     * Checks for infection and spread of infection if current organism is an animal.
+     * Grows plants in preparation for the next field state.
      */
     public void simulateOneStep()
     {
@@ -104,14 +106,14 @@ public class Simulator
         timeOfDay = (timeOfDay + HOURS_PER_STEP) % DAY_END;
         weather.update();
         Field nextFieldState = new Field(field.getDepth(), field.getWidth());    
-        List<Organism> animals = field.getOrganisms();
-        for (Organism anAnimal : animals) {
-            if (anAnimal instanceof Animal animal) {
+        List<Organism> organisms = field.getOrganisms();
+        for (Organism anOrganism : organisms) {
+            if (anOrganism instanceof Animal animal) {
                 animal.handleInfection();
                 animal.handleSpread(field);
             }
             
-            anAnimal.act(field, nextFieldState);
+            anOrganism.act(field, nextFieldState);
         }
         Organism.growPlants(nextFieldState);
         field = nextFieldState;
@@ -141,12 +143,17 @@ public class Simulator
         return timeOfDay;
     }
 
+    /**
+     * Get the current weather state from Weather class
+     * @return The current weather of the simulation.
+     */
     public Weather getWeather() {
         return weather;
     }
 
     /**
-     * Randomly populate the field with barracudas, sharks and rabbits.
+     * Randomly populate the field with barracudas, sharks, fish and plants.
+     * Called at start and reset
      */
     private void populate()
     {

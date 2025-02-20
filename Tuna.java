@@ -2,19 +2,19 @@ import java.util.List;
 
 /**
  * A simple model of a tuna.
- * tunas age, move, breed, and die.
+ * tunas age, move, breed, or die due to overcrowding or starvation.
  * 
- * @author David J. Barnes and Michael Kölling
+ * @author David J. Barnes, Michael Kölling, Aman H, Chris M
  * @version 7.1
  */
 public class Tuna extends Animal
 {
     // Characteristics shared by all tunas (class variables).
     // Tuna parameters
-    private static final int BREEDING_AGE = 6;                    // Fast breeding
-    private static final int MAX_AGE = 80;                       // Shorter life
-    private static final double BREEDING_PROBABILITY = 0.4;       // Higher breed rate
-    private static final int MAX_LITTER_SIZE = 3;                // Larger litters
+    private static final int BREEDING_AGE = 6;
+    private static final int MAX_AGE = 80;
+    private static final double BREEDING_PROBABILITY = 0.4;
+    private static final int MAX_LITTER_SIZE = 3;
     
     // Individual characteristics (instance fields).
     

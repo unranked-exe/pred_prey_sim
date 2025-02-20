@@ -1,12 +1,14 @@
 
 /**
- * Write a description of class Algae here.
+ * Represents Algae in the Sealife simulation, a basic plant organism that serves
+ * as a primary food source for Parrotfish and Goldfish
  *
  * @author Aman H, Chris M
  * @version (a version number or a date)
  */
 public class Algae extends Plant
 {
+    // Fixed food value of 10 steps
     public static final int FOOD_VALUE = 10;
     
     /**

@@ -1,11 +1,11 @@
 import java.util.List;
 
 /**
- * Plant class
- * Inherits from abstract class Organism
+ *  Abstract base class representing plants in the Sealife simulation.
+ *  This class extends Organism and provides core functionality for all plant species.
+ *  Plants remain stationary but can grow and spread across the field based on environmental conditions.
  *
  * @author Aman H, Chris M
- * @version (a version number or a date)
  */
 public abstract class Plant extends Organism
 {
@@ -26,6 +26,7 @@ public abstract class Plant extends Organism
 
     /**
      * Function to grow the plant
+     * First checks if there are any free locations in field and grows plants up to the growth rate per step.
      * @param nextFieldState The new state being built.
      */
     public static void checkGrow(Field nextFieldState) {

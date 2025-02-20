@@ -1,12 +1,12 @@
-
 /**
- * Write a description of class Seaweed here.
+ * Represents Seaweed in the Sealife simulation, a basic plant organism that serves
+ * as a primary food source for Parrotfish and Goldfish.
  *
  * @author Aman H, Chris M
- * @version (a version number or a date)
  */
 public class Seaweed extends Plant
 {
+    // Fixed food value of 13 steps
     public static final int FOOD_VALUE = 13;
     /**
      * Constructor for objects of class Seaweed

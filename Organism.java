@@ -1,21 +1,23 @@
 import java.util.Random;
 
 /**
- * Write a description of class Organism here.
- *
- * @author Chris M
- * @version (a version number or a date)
+ * An abstract class representing an organism in the simulation.
+ * All animals and plants inherit properties from this class.
+ * Each organism has a location in the field and can be either alive or dead.
+ * 
+ * @author Aman H, Chris M
  */
 public abstract class Organism
 {
-    // Whether the animal is alive or not.
-    private boolean alive;
-    // The animal's position.
-    private Location location;
     // Allows for each organsism to access a single instance of the simulator
     protected static Simulator simulator;
     // A shared random number generator to control breeding.
     protected static final Random rand = Randomizer.getRandom();
+
+    // Whether the animal is alive or not.
+    private boolean alive;
+    // The animal's position.
+    private Location location;
 
     /**
      * Constructor for objects of class Animal.
@@ -88,6 +90,10 @@ public abstract class Organism
         this.location = location;
     }
 
+    /**
+     * Calls the grow method for all plants in the field.
+     * @param nextFieldState The new state being built.
+     */
     public static void growPlants(Field nextFieldState)
     {
         Plant.checkGrow(nextFieldState);

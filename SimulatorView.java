@@ -10,7 +10,7 @@ import javax.swing.*;
  * Colors for each type of species can be defined using the
  * setColor method.
  * 
- * @author David J. Barnes and Michael Kölling
+ * @author David J. Barnes, Michael Kölling, Aman H, Chris M
  * @version 7.0
  */
 
@@ -210,7 +210,8 @@ public class SimulatorView extends JFrame
         /**
          * Tell the GUI manager how big we would like to be.
          */
-        public Dimension getPreferredSize()
+        @Override
+         public Dimension getPreferredSize()
         {
             return new Dimension(gridWidth * GRID_VIEW_SCALING_FACTOR,
                                  gridHeight * GRID_VIEW_SCALING_FACTOR);

@@ -4,7 +4,7 @@ import java.util.*;
  * Represent a rectangular grid of field positions.
  * Each position is able to store a single animal/object.
  * 
- * @author David J. Barnes and Michael Kölling
+ * @author David J. Barnes, Michael Kölling ,Aman H, Chris M
  * @version 7.0
  */
 public class Field

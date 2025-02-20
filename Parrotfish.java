@@ -4,10 +4,9 @@ import java.util.List;
 
 /**
  * A simple model of a parrotfish.
- * parrotfishs age, move, breed, and die.
+ * parrotfishs age, move, breed, or die due to overcrowding or starvation.
  * 
- * @author David J. Barnes and Michael Kölling
- * @version 7.1
+ * @author David J. Barnes, Michael Kölling, Aman H, Chris M
  */
 public class Parrotfish extends Animal
 {

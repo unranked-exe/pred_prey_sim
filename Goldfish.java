@@ -3,10 +3,9 @@ import java.util.List;
 
 /**
  * A simple model of a goldfish.
- * goldfishs age, move, breed, and die.
+ * goldfishs age, move, breed, or die due to overcrowding or starvation.
  * 
- * @author David J. Barnes and Michael Kölling
- * @version 7.1
+ * @author David J. Barnes, Michael Kölling, Aman H, Chris M
  */
 public class Goldfish extends Animal
 {
@@ -137,6 +136,7 @@ public class Goldfish extends Animal
                         default -> {
                         }
                     }
+                    //Plant is now eaten
                     plant.setDead();
                     foodLocation = loc;
                 }
