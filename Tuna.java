@@ -11,10 +11,10 @@ public class Tuna extends Animal
 {
     // Characteristics shared by all tunas (class variables).
     // Tuna parameters
-    private static final int BREEDING_AGE = 6;
+    private static final int BREEDING_AGE = 3;
     private static final int MAX_AGE = 80;
-    private static final double BREEDING_PROBABILITY = 0.4;
-    private static final int MAX_LITTER_SIZE = 3;
+    private static final double BREEDING_PROBABILITY = 0.7;
+    private static final int MAX_LITTER_SIZE = 5;
     
     // Individual characteristics (instance fields).
     
@@ -44,29 +44,33 @@ public class Tuna extends Animal
      * @param nextFieldState The updated field.
      */
     @Override
-     public void act(Field currentField, Field nextFieldState)
+    public void act(Field currentField, Field nextFieldState)
     {
         incrementAge();
         if(isAlive()) {
-
             int hour = getSimulator().getTimeOfDay();
-
-            // Always place the tuna in the next state, even if it doesn't move
             Location currentLocation = getLocation();
-            nextFieldState.placeOrganism(this, currentLocation);
-
-            if(hour>= 5 && hour <= 20) {  // Only move and breed during day time
-                List<Location> freeLocations = nextFieldState.getFreeAdjacentLocations(currentLocation);
-                if(!freeLocations.isEmpty()) {
-                    Location nextLocation = freeLocations.remove(0);
-                    giveBirth(nextFieldState, freeLocations);
-                    setLocation(nextLocation);
-                    nextFieldState.placeOrganism(this, nextLocation); // Moves the current Tuna object
+            
+            // Get possible movement locations
+            List<Location> freeLocations = nextFieldState.getFreeAdjacentLocations(currentLocation);
+            
+            if(!freeLocations.isEmpty()) {
+                Location nextLocation = freeLocations.remove(0);
+                
+                // Only breed during daytime (5-20)
+                if(hour >= 5 && hour <= 20) {
+                    if (!freeLocations.isEmpty()) {
+                        giveBirth(nextFieldState, freeLocations);
+                    }
                 }
-                else {
-                    // Overcrowding.
-                    setDead();
-                }
+                
+                // Move regardless of time
+                setLocation(nextLocation);
+                nextFieldState.placeOrganism(this, nextLocation);
+            }
+            else {
+                // Overcrowding - no free space to move to
+                setDead();
             }
         }
     }

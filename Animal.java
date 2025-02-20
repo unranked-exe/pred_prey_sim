@@ -23,7 +23,7 @@ public abstract class Animal extends Organism
     private int foodLevel = 0;
     private boolean infected = false;
     private static final double INFECTION_PROBABILITY = 0.001;
-    private static final double SPREAD_PROBABILITY = 0.5;
+    private static final double SPREAD_PROBABILITY = 0.2;
 
     /**
      * Constructor for objects of class Animal.
