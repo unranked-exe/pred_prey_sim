@@ -1,1 +1,1 @@
-Greatest project of all time
+Our Version of the Foxes and Rabbits Simulation provided is called “Sealife”. The user is able to model a small, scaled down ecosystem of the ocean and all the creatures and plants within and all the interactions in between.
