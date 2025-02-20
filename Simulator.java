@@ -16,18 +16,18 @@ public class Simulator
     private static final int DEFAULT_DEPTH = 80;
 
     // Population probabilities
-    private static final double SHARK_CREATION_PROBABILITY = 0.025;      // Fewer apex predators
-    private static final double BARRACUDA_CREATION_PROBABILITY = 0.025;  // Medium predators
-    private static final double TUNA_CREATION_PROBABILITY = 0.025;       // More prey
-    private static final double GOLDFISH_CREATION_PROBABILITY = 0.015;   // Increased prey population
-    private static final double PARROTFISH_CREATION_PROBABILITY = 0.02; // Increased prey population
+    private static final double SHARK_CREATION_PROBABILITY = 0.02;      // Fewer apex predators
+    private static final double BARRACUDA_CREATION_PROBABILITY = 0.02;  // Medium predators
+    private static final double TUNA_CREATION_PROBABILITY = 0.06;       // More prey
+    private static final double GOLDFISH_CREATION_PROBABILITY = 0.025;   // Increased prey population
+    private static final double PARROTFISH_CREATION_PROBABILITY = 0.025; // Increased prey population
     
     // Food Source Probabilities
-    private static final double ALGAE_CREATION_PROBABILITY = 0.025;
-    private static final double SEAWEED_CREATION_PROBABILITY = 0.025;
+    private static final double ALGAE_CREATION_PROBABILITY = 0.0175;
+    private static final double SEAWEED_CREATION_PROBABILITY = 0.0175;
 
     // Time of day constants
-    private static final int DAY_START = 12;
+    private static final int DAY_START = 5;
     private static final int DAY_END = 24;
     private static final int HOURS_PER_STEP = 1;
 
